@@ -7,3 +7,10 @@
  * @link       https://nerudas.ru
  */
 
+#system-message-container {
+	width: 100%;
+}
+
+#adminForm td {
+	vertical-align: middle;
+}
