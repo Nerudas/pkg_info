@@ -10,6 +10,10 @@
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\MVC\Controller\AdminController;
+use Joomla\CMS\Session\Session;
+use Joomla\CMS\Language\Text;
+
 class InfoControllerItems extends AdminController
 {
 	/**
@@ -18,7 +22,7 @@ class InfoControllerItems extends AdminController
 	 * @var    string
 	 * @since  1.0.0
 	 */
-	protected $text_prefix = 'COM_IFO';
+	protected $text_prefix = 'COM_INFO';
 
 	/**
 	 *

@@ -137,7 +137,7 @@ class InfoModelItems extends ListModel
 			->from($db->quoteName('#__info', 'i'));
 
 		// Join over the users for the author.
-		$query->select('ua.name AS owner_name')
+		$query->select('ua.name AS author_name')
 			->join('LEFT', '#__users AS ua ON ua.id = i.created_by');
 
 		// Join over the asset groups.
