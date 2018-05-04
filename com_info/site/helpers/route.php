@@ -10,3 +10,21 @@
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Helper\RouteHelper;
+
+class InfoHelperRoute extends RouteHelper
+{
+	/**
+	 * Fetches the item route
+	 *
+	 * @param  int $id Item ID
+	 *
+	 * @return  string
+	 *
+	 * @since 1.0.0
+	 */
+	public static function getItemRoute($id = null)
+	{
+		return 'index.php?option=com_info&view=item&key=1&id=' . $id;
+	}
+}

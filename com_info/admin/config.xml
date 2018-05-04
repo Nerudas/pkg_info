@@ -2,6 +2,34 @@
 <config>
 	<fieldset name="global" label="JGLOBAL_FIELDSET_OPTIONS">
 		<field name="sef_advanced" type="hidden" default="1"/>
+		<field name="items_limit" type="list"
+			   label="COM_INFO_PARAMS_ITEMS_LIMIT"
+			   default="10">
+			<option value="5">J5</option>
+			<option value="10">J10</option>
+			<option value="15">J15</option>
+			<option value="20">J20</option>
+			<option value="25">J25</option>
+			<option value="30">J30</option>
+			<option value="50">J50</option>
+			<option value="100">J100</option>
+			<option value="0">JALL</option>
+		</field>
+		<field name="search_placeholder" type="text"
+			   label="COM_INFO_PARAMS_SEARCH_PLACEHOLDER"
+			   class="input-xlarge"
+			   size="40"/>
+		<field name="list_layout" type="componentlayout"
+			   label="COM_INFO_PARAMS_LIST_LAYOUT"
+			   extension="com_info"
+			   view="list"/>
+		<field name="list_item_layout" type="listitemlayout"
+			   addfieldpath="/administrator/components/com_info/models/fields"
+			   label="COM_INFO_PARAMS_LIST_ITEM_LAYOUT"/>
+		<field name="company_layout" type="componentlayout"
+			   label="COM_INFO_PARAMS_ITEM_LAYOUT"
+			   extension="com_info"
+			   view="item"/>
 	</fieldset>
 	<fieldset name="permissions"
 			  label="JCONFIG_PERMISSIONS_LABEL"
