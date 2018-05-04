@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS `#__info` (
   `alias`        VARCHAR(400)     NOT NULL DEFAULT '',
   `introtext`    LONGTEXT         NOT NULL DEFAULT '',
   `fulltext`     LONGTEXT         NOT NULL DEFAULT '',
-  `intro_image`  TEXT             NOT NULL DEFAULT '',
+  `introimage`   TEXT             NOT NULL DEFAULT '',
   `header`       TEXT             NOT NULL DEFAULT '',
   `images`       LONGTEXT         NOT NULL DEFAULT '',
   `related`      TEXT             NOT NULL DEFAULT '',
