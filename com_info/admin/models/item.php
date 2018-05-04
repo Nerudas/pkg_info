@@ -141,7 +141,7 @@ class InfoModelItem extends AdminModel
 		// Set update images links
 		$saveurl = Uri::base(true) . '/index.php?option=com_info&task=item.updateImages&id='
 			. $id . '&field=';
-		$form->setFieldAttribute('intro_image', 'saveurl', $saveurl . 'intro_image');
+		$form->setFieldAttribute('introimage', 'saveurl', $saveurl . 'introimage');
 		$form->setFieldAttribute('header', 'saveurl', $saveurl . 'header');
 		$form->setFieldAttribute('images', 'saveurl', $saveurl . 'images');
 
@@ -278,9 +278,9 @@ class InfoModelItem extends AdminModel
 			$data['imagefolder'] = (!empty($data['imagefolder'])) ? $data['imagefolder'] :
 				$this->imageFolderHelper->getItemImageFolder($id);
 
-			if (isset($data['intro_image']))
+			if (isset($data['introimage']))
 			{
-				$this->imageFolderHelper->saveItemImages($id, $data['imagefolder'], '#__info', 'intro_image', $data['intro_image']);
+				$this->imageFolderHelper->saveItemImages($id, $data['imagefolder'], '#__info', 'introimage', $data['introimage']);
 			}
 			if (isset($data['header']))
 			{

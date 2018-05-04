@@ -100,7 +100,7 @@ class com_InfoInstallerScript
 		$item->field_mappings->common->core_featured        = 'null';
 		$item->field_mappings->common->core_metadata        = 'metadata';
 		$item->field_mappings->common->core_language        = 'null';
-		$item->field_mappings->common->core_images          = 'intro_image';
+		$item->field_mappings->common->core_images          = 'introimage';
 		$item->field_mappings->common->core_urls            = 'null';
 		$item->field_mappings->common->core_version         = 'null';
 		$item->field_mappings->common->core_ordering        = 'publish_up';

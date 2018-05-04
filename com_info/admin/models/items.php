@@ -33,7 +33,7 @@ class InfoModelItems extends ListModel
 				'alias', 'i.alias',
 				'introtext', 'i.introtext',
 				'fulltext', 'i.fulltext',
-				'intro_image', 'i.intro_image',
+				'introimage', 'i.introimage',
 				'header', 'i.header',
 				'images', 'i.images',
 				'related', 'i.related',
