@@ -63,9 +63,6 @@
 			   label="JGLOBAL_FIELD_REGIONS_LABEL"
 			   description="JGLOBAL_FIELD_REGIONS_DESC"
 			   show_all="true"/>
-		<field name="related" type="related"
-			   label="COM_INFO_ITEM_RELATED"
-			   multiple="true"/>
 		<field name="imagefolder" type="imagefolder" path="images/info"/>
 	</fieldset>
 	<fieldset name="attribs" label="JGLOBAL_FIELDSET_OPTIONS">
@@ -87,6 +84,9 @@
 				   class="input-xxlarge input-large-text"
 				   size="40"/>
 		</fields>
+		<field name="related" type="related"
+			   label="COM_INFO_ITEM_RELATED"
+			   multiple="true"/>
 	</fieldset>
 	<fieldset name="publishingdata" label="">
 		<field name="created" type="calendar"
