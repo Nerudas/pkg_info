@@ -47,12 +47,12 @@ class JFormFieldRelated extends JFormFieldList
 
 		foreach ($items as $item)
 		{
-			$text             = '[' . $item->id . '] ' . $item->title;
-			$option           = new stdClass();
-			$option->value    = $item->id;
-			$option->text     = $text;
+			$text            = '[' . $item->id . '] ' . $item->title;
+			$option          = new stdClass();
+			$option->value   = $item->id;
+			$option->text    = $text;
 			$option->disable = ($item->id == $current);
-			$options[]        = $option;
+			$options[]       = $option;
 		}
 
 		return $options;

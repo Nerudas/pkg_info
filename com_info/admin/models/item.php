@@ -236,7 +236,7 @@ class InfoModelItem extends AdminModel
 			$data['metadata'] = (string) $registry;
 		}
 
-		$data['related'] = (isset($data['related']))? implode(',', $data['related']) : '';
+		$data['related'] = (isset($data['related'])) ? implode(',', $data['related']) : '';
 
 		if (empty($data['created_by']))
 		{
