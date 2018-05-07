@@ -9,7 +9,7 @@ use Joomla\CMS\Language\Text;
 
 FormHelper::loadFieldClass('list');
 
-class JFormFieldNavigationTags extends JFormFieldList
+class JFormFieldInfoTags extends JFormFieldList
 {
 	/**
 	 * The form field type.
@@ -17,7 +17,7 @@ class JFormFieldNavigationTags extends JFormFieldList
 	 * @var    string
 	 * @since  1.0.0
 	 */
-	protected $type = 'navigationtags';
+	protected $type = 'infotags';
 
 	/**
 	 * Method to get the field options.
@@ -28,7 +28,7 @@ class JFormFieldNavigationTags extends JFormFieldList
 	 */
 	protected function getOptions()
 	{
-		$parent = (int) ComponentHelper::getParams('com_info')->get('navigation_tags');
+		$parent = (int) ComponentHelper::getParams('com_info')->get('tags');
 
 		// Get tags
 		$db    = Factory::getDbo();

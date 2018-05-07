@@ -25,6 +25,20 @@ class InfoHelperRoute extends RouteHelper
 	 */
 	public static function getItemRoute($id = null)
 	{
-		return 'index.php?option=com_info&view=item&key=1&id=' . $id;
+		return 'index.php?option=com_info&view=item&tag_id=1&id=' . $id;
+	}
+
+	/**
+	 * Fetches the list route
+	 *
+	 * @param  int $tag_id Item ID
+	 *
+	 * @return  string
+	 *
+	 * @since 1.0.0
+	 */
+	public static function getListRoute($tag_id = 1)
+	{
+		return 'index.php?option=com_info&view=list&tag_id=' . $tag_id;
 	}
 }

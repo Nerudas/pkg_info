@@ -445,7 +445,7 @@ class InfoModelItem extends AdminModel
 		}
 
 		// Check tags
-		$parent = (int) ComponentHelper::getParams('com_info')->get('navigation_tags');
+		$parent = (int) ComponentHelper::getParams('com_info')->get('tags');
 		$db     = Factory::getDbo();
 		$query  = $db->getQuery(true)
 			->select('t.alias')

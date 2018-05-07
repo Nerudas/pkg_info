@@ -2,8 +2,8 @@
 <config>
 	<fieldset name="global" label="JGLOBAL_FIELDSET_OPTIONS">
 		<field name="sef_advanced" type="hidden" default="1"/>
-		<field name="navigation_tags" type="sql"
-			   label="COM_INFO_PARAMS_NAVIGATION_TAGS"
+		<field name="tags" type="sql"
+			   label="JTAG"
 			   query="SELECT id, title FROM #__tags WHERE level = 1"
 			   key_field="id"
 			   value_field="title">

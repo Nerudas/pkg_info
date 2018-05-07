@@ -8,7 +8,7 @@
 
 	<fields name="request" addfieldpath="/administrator/components/com_info/models/fields">
 		<fieldset name="request">
-			<field name="id" type="navigationtags"
+			<field name="tag_id" type="infotags"
 				   label="JTAG"
 				   default="1"
 				   required="true">

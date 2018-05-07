@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form>
+	<fields name="filter">
+		<field name="search" type="text"
+			   label="JSEARCH_FILTER"
+			   hint="JSEARCH_FILTER"/>
+		<field name="tag" type="infotags"
+			   label="JTAG"
+			   links="true"/>
+	</fields>
+</form>

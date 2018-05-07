@@ -10,3 +10,7 @@
 
 defined('_JEXEC') or die;
 
+$item = $displayData;
+
+echo '<pre>', print_r('default', true), '</pre>';
+echo '<pre>', print_r($item, true), '</pre>';
