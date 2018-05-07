@@ -20,6 +20,7 @@ use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Filter\OutputFilter;
 use Joomla\CMS\Form\Form;
+use Joomla\CMS\Component\ComponentHelper;
 
 class InfoModelItem extends AdminModel
 {
@@ -380,15 +381,6 @@ class InfoModelItem extends AdminModel
 			return $response;
 		}
 
-		// Check form
-		if (in_array($alias, array('form', 'edit', 'add')))
-		{
-			$response->status = 'error';
-			$response->msg    = Text::_('COM_INFO_ERROR_ALIAS_EXIST');
-			$response->data   = $default_alias;
-
-			return $response;
-		}
 
 		// Check idXXX
 		preg_match('/^id(.*)/', $alias, $matches);
@@ -444,6 +436,32 @@ class InfoModelItem extends AdminModel
 		$table = $this->getTable();
 		$table->load(array('alias' => $alias));
 		if (!empty($table->id) && ($table->id != $id))
+		{
+			$response->status = 'error';
+			$response->msg    = Text::_('COM_INFO_ERROR_ALIAS_EXIST');
+			$response->data   = $default_alias;
+
+			return $response;
+		}
+
+		// Check tags
+		$parent = (int) ComponentHelper::getParams('com_info')->get('navigation_tags');
+		$db     = Factory::getDbo();
+		$query  = $db->getQuery(true)
+			->select('t.alias')
+			->from($db->quoteName('#__tags', 't'))
+			->where($db->quoteName('t.alias') . ' <>' . $db->quote('root'));
+		if ($parent > 1)
+		{
+			$query->where('(t.id = ' . $parent . ' OR t.parent_id = ' . $parent . ')');
+		}
+		else
+		{
+			$query->where('t.parent_id = 1');
+		}
+		$db->setQuery($query);
+		$tags = $db->loadColumn();
+		if (in_array($alias, $tags))
 		{
 			$response->status = 'error';
 			$response->msg    = Text::_('COM_INFO_ERROR_ALIAS_EXIST');
