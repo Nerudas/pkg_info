@@ -303,7 +303,7 @@ class InfoModelList extends ListModel
 		$items = parent::getItems();
 		if (!empty($items))
 		{
-			$mainTags = ComponentHelper::getParams('com_info')->get('tags');
+			$mainTag = ComponentHelper::getParams('com_info')->get('tags');
 
 			foreach ($items as &$item)
 			{
@@ -331,7 +331,7 @@ class InfoModelList extends ListModel
 				{
 					foreach ($item->tags->itemTags as &$tag)
 					{
-						$tag->main = ($tag->parent_id == $mainTags);
+						$tag->main = ($tag->parent_id == $mainTag);
 					}
 
 					$item->tags->itemTags = ArrayHelper::sortObjects($item->tags->itemTags, 'main', -1);
