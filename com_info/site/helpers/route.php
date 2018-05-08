@@ -39,6 +39,6 @@ class InfoHelperRoute extends RouteHelper
 	 */
 	public static function getListRoute($tag_id = 1)
 	{
-		return 'index.php?option=com_info&view=list&tag_id=' . $tag_id;
+		return 'index.php?option=com_info&view=list&id=' . $tag_id;
 	}
 }

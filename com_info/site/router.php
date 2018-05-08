@@ -32,7 +32,7 @@ class InfoRouter extends RouterView
 	{
 		// List route
 		$list = new RouterViewConfiguration('list');
-		$list->setKey('tag_id')->setNestable();
+		$list->setKey('id')->setNestable();
 		$this->registerView($list);
 
 		// Item route
@@ -120,7 +120,7 @@ class InfoRouter extends RouterView
 	 */
 	public function getListId($segment, $query)
 	{
-		if (isset($query['tag_id']))
+		if (isset($query['id']))
 		{
 			$parent = (int) ComponentHelper::getParams('com_info')->get('tags', 1);
 

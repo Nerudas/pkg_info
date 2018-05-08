@@ -18,6 +18,7 @@ use Joomla\Registry\Registry;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\Utilities\ArrayHelper;
+use Joomla\CMS\Language\Text;
 
 jimport('joomla.filesystem.file');
 
@@ -30,6 +31,14 @@ class InfoModelList extends ListModel
 	 * @since  1.0.0
 	 */
 	protected $_itemLayouts = array('default' => 'default');
+
+	/**
+	 * This ta
+	 *
+	 * @var    object
+	 * @since  1.0.0
+	 */
+	protected $_tag = null;
 
 	/**
 	 * Constructor.
@@ -91,7 +100,7 @@ class InfoModelList extends ListModel
 		$user = Factory::getUser();
 
 		// Set id state
-		$pk = $app->input->getInt('tag_id', 1);
+		$pk = $app->input->getInt('id', 1);
 		$this->setState('tag.id', $pk);
 
 		// Load the parameters. Merge Global and Menu Item params into new object
@@ -107,7 +116,7 @@ class InfoModelList extends ListModel
 		$this->setState('params', $mergedParams);
 
 		// Published state
-		if ((!$user->authorise('core.manage', 'com_companies')))
+		if ((!$user->authorise('core.manage', 'com_info')))
 		{
 			// Limit to published for people who can't edit or edit.state.
 			$this->setState('filter.published', 1);
@@ -426,6 +435,99 @@ class InfoModelList extends ListModel
 		$app->setUserState($key, $set_state);
 
 		return $set_state;
+	}
+
+	/**
+	 * Get the current tag
+	 *
+	 * @param null $pk
+	 *
+	 * @return object|false
+	 *
+	 * @since 1.0.0
+	 */
+	public function getTag($pk = null)
+	{
+		if (!is_object($this->_tag))
+		{
+			$app = Factory::getApplication();
+			$pk  = (!empty($pk)) ? (int) $pk : (int) $this->getState('tag.id', $app->input->get('id', 1));
+
+			$root            = new stdClass();
+			$root->title     = Text::_('JGLOBAL_ROOT');
+			$root->id        = 1;
+			$root->parent_id = 0;
+			$root->link      = Route::_(InfoHelperRoute::getListRoute(1));
+
+			$mainTag = ComponentHelper::getParams('com_info')->get('tags', 1);
+
+			$tag_id = ($pk > 1) ? $pk : $mainTag;
+
+			if ($tag_id > 1)
+			{
+				$errorRedirect = Route::_(InfoHelperRoute::getListRoute(1));
+				$errorMsg      = Text::_('COM_INFO_ERROR_TAG_NOT_FOUND');
+				try
+				{
+					$db    = $this->getDbo();
+					$query = $db->getQuery(true)
+						->select(array('t.id', 't.parent_id', 't.title', 'pt.title as parent_title'))
+						->from('#__tags AS t')
+						->where('t.id = ' . (int) $tag_id)
+						->join('LEFT', '#__tags AS pt ON pt.id = t.parent_id');
+
+					$user = Factory::getUser();
+					if (!$user->authorise('core.admin'))
+					{
+						$query->where('t.access IN (' . implode(',', $user->getAuthorisedViewLevels()) . ')');
+					}
+					if (!$user->authorise('core.manage', 'com_tags'))
+					{
+						$query->where('t.state =  1');
+					}
+
+					$db->setQuery($query);
+					$data = $db->loadObject();
+
+					if (empty($data))
+					{
+						$app->redirect($url = $errorRedirect, $msg = $errorMsg, $msgType = 'error', $moved = true);
+
+						return false;
+					}
+					if ($data->id == $mainTag)
+					{
+						$root->title = $data->title;
+
+						$data = $root;
+					}
+
+
+					$data->link = Route::_(InfoHelperRoute::getListRoute($data->id));
+
+					$this->_tag = $data;
+				}
+				catch (Exception $e)
+				{
+					if ($e->getCode() == 404)
+					{
+						$app->redirect($url = $errorRedirect, $msg = $errorMsg, $msgType = 'error', $moved = true);
+					}
+					else
+					{
+						$this->setError($e);
+						$this->_tag = false;
+					}
+				}
+			}
+			else
+			{
+				$this->_tag = $root;
+			}
+		}
+
+
+		return $this->_tag;
 	}
 
 }

@@ -102,7 +102,19 @@ class JFormFieldInfoTags extends JFormFieldList
 		{
 			$query->where('t.parent_id = 1');
 		}
+
+		$user = Factory::getUser();
+		if (!$user->authorise('core.admin'))
+		{
+			$query->where('t.access IN (' . implode(',', $user->getAuthorisedViewLevels()) . ')');
+		}
+		if (!$user->authorise('core.manage', 'com_tags'))
+		{
+			$query->where('t.state =  1');
+		}
+
 		$query->order($db->escape('t.lft') . ' ' . $db->escape('asc'));
+
 
 		$db->setQuery($query);
 		$tags = $db->loadObjectList();

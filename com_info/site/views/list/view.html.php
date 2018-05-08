@@ -10,10 +10,8 @@
 
 defined('_JEXEC') or die;
 
-
 use Joomla\CMS\MVC\View\HtmlView;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Router\Route;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
@@ -117,7 +115,8 @@ class InfoViewList extends HtmlView
 		$app = Factory::getApplication();
 
 		$this->state         = $this->get('State');
-		$this->link          = Route::_(InfoHelperRoute::getListRoute($this->state->get('tag.id')));
+		$this->tag           = $this->get('tag');
+		$this->link          = $this->tag->link;
 		$this->items         = $this->get('Items');
 		$this->params        = $this->state->get('params');
 		$this->pagination    = $this->get('Pagination');
@@ -163,17 +162,30 @@ class InfoViewList extends HtmlView
 		$app      = Factory::getApplication();
 		$url      = rtrim(URI::root(), '/') . $this->link;
 		$sitename = $app->get('sitename');
+		$pathway  = $app->getPathway();
 		$menu     = $app->getMenu()->getActive();
+		$id       = (int) @$menu->query['id'];
 
-		if ($menu)
+
+		// If the menu item does not concern this contact
+		if ($menu && ($menu->query['option'] !== 'com_info' || $menu->query['view'] !== 'list' || $id != $this->tag->id))
 		{
-			$this->params->def('page_heading', $this->params->get('page_title', $menu->title));
+			$path   = array();
+			$path[] = array('title' => $this->tag->title, 'link' => '');
+			foreach (array_reverse($path) as $item)
+			{
+				$pathway->addItem($item['title'], $item['link']);
+			}
 		}
-		else
+
+
+		// Set pathway title
+		$title = array();
+		foreach ($pathway->getPathWay() as $item)
 		{
-			$this->params->def('page_heading', Text::_('COM_INFO'));
+			$title[] = $item->name;
 		}
-		$title = $this->params->get('page_title', $sitename);
+		$title = implode(' / ', $title);
 
 		if ($app->get('sitename_pagetitles', 0) == 1)
 		{
