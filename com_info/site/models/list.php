@@ -79,7 +79,11 @@ class InfoModelList extends ListModel
 				'tags_map', 'i.tags_map'
 			);
 		}
+
+		JLoader::register('imageFolderHelper', JPATH_PLUGINS . '/fieldtypes/ajaximage/helpers/imagefolder.php');
+		$this->imageFolderHelper = new imageFolderHelper('images/pages');
 		parent::__construct($config);
+		
 	}
 
 	/**
@@ -336,6 +340,13 @@ class InfoModelList extends ListModel
 
 					$item->tags->itemTags = ArrayHelper::sortObjects($item->tags->itemTags, 'main', -1);
 				}
+
+				$item->imageFolder = $this->imageFolderHelper->getItemImageFolder($item->id);
+				
+				// Sort codes
+				$item->introtext = str_replace('{id}', $item->id, $item->introtext);
+				$item->introtext = str_replace('{title}', $item->title, $item->introtext);
+				$item->introtext = str_replace('{imageFolder}', $item->imageFolder . '/content', $item->introtext);
 			}
 		}
 
