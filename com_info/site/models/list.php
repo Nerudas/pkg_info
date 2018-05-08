@@ -293,6 +293,7 @@ class InfoModelList extends ListModel
 		$items = parent::getItems();
 		if (!empty($items))
 		{
+			$mainTags = ComponentHelper::getParams('com_info')->get('tags');
 
 			foreach ($items as &$item)
 			{
@@ -315,6 +316,16 @@ class InfoModelList extends ListModel
 				// Get Tags
 				$item->tags = new TagsHelper;
 				$item->tags->getItemTags('com_info.item', $item->id);
+
+				if (!empty($item->tags->itemTags))
+				{
+					foreach ($item->tags->itemTags as &$tag)
+					{
+						$tag->main = ($tag->parent_id == $mainTags);
+					}
+
+					$item->tags->itemTags = ArrayHelper::sortObjects($item->tags->itemTags, 'main', -1);
+				}
 			}
 		}
 

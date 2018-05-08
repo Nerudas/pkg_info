@@ -13,6 +13,7 @@ defined('_JEXEC') or die;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\Utilities\ArrayHelper;
 use Joomla\CMS\Helper\TagsHelper;
+use Joomla\CMS\Component\ComponentHelper;
 
 class InfoModelItems extends ListModel
 {
@@ -263,11 +264,24 @@ class InfoModelItems extends ListModel
 
 		if (!empty($items))
 		{
+			$mainTags = ComponentHelper::getParams('com_info')->get('tags');
+
 			foreach ($items as &$item)
 			{
 				// Get Tags
 				$item->tags = new TagsHelper;
 				$item->tags->getItemTags('com_info.item', $item->id);
+
+				if (!empty($item->tags->itemTags))
+				{
+
+					foreach ($item->tags->itemTags as &$tag)
+					{
+						$tag->main = ($tag->parent_id == $mainTags);
+					}
+
+					$item->tags->itemTags = ArrayHelper::sortObjects($item->tags->itemTags, 'main', -1);
+				}
 			}
 		}
 
