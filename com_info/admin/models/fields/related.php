@@ -45,6 +45,9 @@ class JFormFieldRelated extends JFormFieldList
 		$db->setQuery($query);
 		$items = $db->loadObjectList('id');
 
+		$this->value = (!empty($this->value) && $this->multiple && !is_array($this->value)) ?
+			explode(',', $this->value) : $this->value;
+
 		foreach ($items as $item)
 		{
 			$text            = '[' . $item->id . '] ' . $item->title;

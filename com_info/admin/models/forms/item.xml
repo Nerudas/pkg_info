@@ -86,6 +86,7 @@
 		</fields>
 		<field name="related" type="related"
 			   label="COM_INFO_ITEM_RELATED"
+			   class="input-xlarge"
 			   multiple="true"/>
 	</fieldset>
 	<fieldset name="publishingdata" label="">
