@@ -142,6 +142,13 @@ class InfoModelItem extends ItemModel
 				// Link
 				$data->link = Route::_(InfoHelperRoute::getItemRoute($data->id));
 
+				$data->imageFolder = $this->imageFolderHelper->getItemImageFolder($data->id);
+
+				// Shortcodes
+				$data->fulltext = str_replace('{id}', $data->id, $data->fulltext);
+				$data->fulltext = str_replace('{title}', $data->title, $data->fulltext);
+				$data->fulltext = str_replace('{imageFolder}', $data->imageFolder . '/content', $data->fulltext);
+				
 				// Convert the images field to an array.
 				$registry     = new Registry($data->images);
 				$data->images = $registry->toArray();

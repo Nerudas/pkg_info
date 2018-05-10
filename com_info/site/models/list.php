@@ -361,7 +361,7 @@ class InfoModelList extends ListModel
 
 				$item->imageFolder = $this->imageFolderHelper->getItemImageFolder($item->id);
 
-				// Sort codes
+				// Shortcodes
 				$item->introtext = str_replace('{id}', $item->id, $item->introtext);
 				$item->introtext = str_replace('{title}', $item->title, $item->introtext);
 				$item->introtext = str_replace('{imageFolder}', $item->imageFolder . '/content', $item->introtext);
