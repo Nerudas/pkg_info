@@ -33,7 +33,7 @@ class InfoModelList extends ListModel
 	protected $_itemLayouts = array('default' => 'default');
 
 	/**
-	 * This ta
+	 * This tag
 	 *
 	 * @var    object
 	 * @since  1.0.0
@@ -83,7 +83,7 @@ class InfoModelList extends ListModel
 		JLoader::register('imageFolderHelper', JPATH_PLUGINS . '/fieldtypes/ajaximage/helpers/imagefolder.php');
 		$this->imageFolderHelper = new imageFolderHelper('images/pages');
 		parent::__construct($config);
-		
+
 	}
 
 	/**
@@ -168,6 +168,8 @@ class InfoModelList extends ListModel
 		$id .= ':' . $this->getState('filter.search');
 		$id .= ':' . $this->getState('filter.region');
 		$id .= ':' . serialize($this->getState('filter.published'));
+		$id .= ':' . serialize($this->getState('filter.item_id'));
+		$id .= ':' . $this->getState('filter.item_id.include');
 
 		return parent::getStoreId($id);
 	}
@@ -199,6 +201,21 @@ class InfoModelList extends ListModel
 		{
 			$groups = implode(',', $user->getAuthorisedViewLevels());
 			$query->where('i.access IN (' . $groups . ')');
+		}
+
+		// Filter by a single or group of items.
+		$itemId = $this->getState('filter.item_id');
+		if (is_numeric($itemId))
+		{
+			$type = $this->getState('filter.item_id.include', true) ? '= ' : '<> ';
+			$query->where('i.id ' . $type . (int) $itemId);
+		}
+		elseif (is_array($itemId))
+		{
+			$itemId = ArrayHelper::toInteger($itemId);
+			$itemId = implode(',', $itemId);
+			$type   = $this->getState('filter.item_id.include', true) ? 'IN' : 'NOT IN';
+			$query->where('i.id ' . $type . ' (' . $itemId . ')');
 		}
 
 		// Filter by published state.
@@ -342,7 +359,7 @@ class InfoModelList extends ListModel
 				}
 
 				$item->imageFolder = $this->imageFolderHelper->getItemImageFolder($item->id);
-				
+
 				// Sort codes
 				$item->introtext = str_replace('{id}', $item->id, $item->introtext);
 				$item->introtext = str_replace('{title}', $item->title, $item->introtext);

@@ -1,4 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<form>
+<metadata>
+	<layout title="COM_INFO_VIEW_ITEM" option="COM_INFO_VIEW_ITEM_DEFAULT_OPTION">
+		<message>
+			<![CDATA[COM_INFO_VIEW_ITEM_DESCRIPTION]]>
+		</message>
+	</layout>
 
-</form>
+	<fields name="request" addfieldpath="/administrator/components/com_info/models/fields">
+		<fieldset name="request">
+			<field name="id" type="sql"
+				   label="COM_INFO_ITEM"
+				   query="SELECT id, title FROM #__info"
+				   key_field="id"
+				   value_field="title"
+				   required="true">
+				<option value="">JNONE</option>
+			</field>
+		</fieldset>
+	</fields>
+
+	<fields name="params">
+	</fields>
+</metadata>
