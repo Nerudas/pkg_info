@@ -226,13 +226,14 @@ class InfoModelList extends ListModel
 			{
 				$query->where('( i.state = ' . (int) $published .
 					' OR ( i.created_by = ' . $user->id . ' AND i.state IN (0,1)))');
+				$query->where('(i.in_work = 0 OR i.created_by = ' . $user->id . ')');
 			}
 			elseif (is_array($published))
 			{
 				$query->where('i.state IN (' . implode(',', $published) . ')');
 			}
 
-			$query->where('in_work = 0');
+
 		}
 
 		// Filter by regions
