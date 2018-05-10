@@ -110,7 +110,7 @@ class JFormFieldInfoTags extends JFormFieldList
 		}
 		if (!$user->authorise('core.manage', 'com_tags'))
 		{
-			$query->where('t.state =  1');
+			$query->where('t.published =  1');
 		}
 
 		$query->order($db->escape('t.lft') . ' ' . $db->escape('asc'));

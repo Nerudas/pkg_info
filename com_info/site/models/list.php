@@ -512,7 +512,7 @@ class InfoModelList extends ListModel
 					}
 					if (!$user->authorise('core.manage', 'com_tags'))
 					{
-						$query->where('t.state =  1');
+						$query->where('t.published =  1');
 					}
 
 					$db->setQuery($query);
