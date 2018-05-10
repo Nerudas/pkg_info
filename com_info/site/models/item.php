@@ -42,6 +42,23 @@ class InfoModelItem extends ItemModel
 	protected $_related = array();
 
 	/**
+	 * Constructor.
+	 *
+	 * @param   array $config An optional associative array of configuration settings.
+	 *
+	 * @see     AdminModel
+	 *
+	 * @since   1.0.0
+	 */
+	public function __construct($config = array())
+	{
+		JLoader::register('imageFolderHelper', JPATH_PLUGINS . '/fieldtypes/ajaximage/helpers/imagefolder.php');
+		$this->imageFolderHelper = new imageFolderHelper('images/info');
+
+		parent::__construct($config);
+	}
+
+	/**
 	 * Method to auto-populate the model state.
 	 *
 	 * Note. Calling getState in this method will result in recursion.
@@ -148,7 +165,7 @@ class InfoModelItem extends ItemModel
 				$data->fulltext = str_replace('{id}', $data->id, $data->fulltext);
 				$data->fulltext = str_replace('{title}', $data->title, $data->fulltext);
 				$data->fulltext = str_replace('{imageFolder}', $data->imageFolder . '/content', $data->fulltext);
-				
+
 				// Convert the images field to an array.
 				$registry     = new Registry($data->images);
 				$data->images = $registry->toArray();
@@ -164,14 +181,14 @@ class InfoModelItem extends ItemModel
 
 				$data->tags = new TagsHelper;
 				$data->tags->getItemTags('com_info.item', $data->id);
-				if (!empty($item->tags->itemTags))
+				if (!empty($data->tags->itemTags))
 				{
-					foreach ($item->tags->itemTags as &$tag)
+					foreach ($data->tags->itemTags as &$tag)
 					{
 						$tag->main = ($tag->parent_id == $mainTag);
 					}
 
-					$item->tags->itemTags = ArrayHelper::sortObjects($item->tags->itemTags, 'main', -1);
+					$data->tags->itemTags = ArrayHelper::sortObjects($data->tags->itemTags, 'main', -1);
 				}
 
 				// Convert parameter fields to objects.
