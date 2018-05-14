@@ -140,7 +140,7 @@ class InfoModelList extends ListModel
 		parent::populateState($ordering, $direction);
 
 		// Set limit & limitstart for query.
-		$this->setState('list.limit', $params->get('companies_limit', 10, 'uint'));
+		$this->setState('list.limit', $params->get('items_limit', 10, 'uint'));
 		$this->setState('list.start', $app->input->get('limitstart', 0, 'uint'));
 
 		// Set ordering for query.
