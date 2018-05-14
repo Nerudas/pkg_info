@@ -81,7 +81,7 @@ class InfoModelList extends ListModel
 		}
 
 		JLoader::register('imageFolderHelper', JPATH_PLUGINS . '/fieldtypes/ajaximage/helpers/imagefolder.php');
-		$this->imageFolderHelper = new imageFolderHelper('images/pages');
+		$this->imageFolderHelper = new imageFolderHelper('images/info');
 		parent::__construct($config);
 
 	}
