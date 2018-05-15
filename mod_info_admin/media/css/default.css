@@ -7,6 +7,18 @@
  * @link       https://nerudas.ru
  */
 
+[data-mod-info-admin] .result {
+	display: none;
+}
+
+[data-mod-info-admin] .actions {
+	text-align: right;
+}
+
+[data-mod-info-admin] .table {
+	margin-bottom: 0;
+}
+
 [data-mod-info-admin] table .tags .label {
 	margin-right: 3px;
 	margin-bottom: 3px;
