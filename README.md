@@ -16,3 +16,6 @@ Component for creating Information section on the site
 
 * **Information - Administrator Module**  
 Module for displaying information about information items in the admin panel
+
+* **Information - Latest Module**  
+Module for displaying the latest information items

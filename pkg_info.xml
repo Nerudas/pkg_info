@@ -17,6 +17,7 @@
 	<files>
 		<folder type="component" id="com_info">com_info</folder>
 		<folder type="module" id="mod_info_admin" client="administrator">mod_info_admin</folder>
+		<folder type="module" id="mod_info_latest" client="site">mod_info_latest</folder>
 	</files>
 	<updateservers>
 		<server type="extension" priority="1" name="Information Package">
