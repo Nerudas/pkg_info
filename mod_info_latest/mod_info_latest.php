@@ -22,6 +22,7 @@ JLoader::register('InfoHelperRoute', JPATH_SITE . '/components/com_info/helpers/
 BaseDatabaseModel::addIncludePath(JPATH_ROOT . '/components/com_info/models');
 $model = BaseDatabaseModel::getInstance('List', 'InfoModel', array('ignore_request' => true));
 $model->setState('list.limit', $params->get('limit', 5));
+$model->setState('tag.id', $params->get('tag_id', 1));
 if ((!Factory::getUser()->authorise('core.edit.state', 'com_info.item')) &&
 	(!Factory::getUser()->authorise('core.edit', 'com_info.item')))
 {
