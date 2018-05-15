@@ -35,6 +35,6 @@ else
 
 // Variables
 $items    = $model->getItems();
-$listLink = Route::_(InfoHelperRoute::getListRoute());
+$listLink = Route::_(InfoHelperRoute::getListRoute($params->get('tag_id', 1)));
 
 require ModuleHelper::getLayoutPath($module->module, $params->get('layout', 'default'));
