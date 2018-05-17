@@ -218,6 +218,8 @@ class InfoModelItems extends ListModel
 					$sql[] = $db->quoteName($column) . ' LIKE '
 						. $db->quote('%' . str_replace(' ', '%', $db->escape(trim($search), true) . '%'));
 				}
+
+				$query->where('(' . implode(' OR ', $sql) . ')');
 			}
 		}
 
