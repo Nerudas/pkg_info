@@ -48,16 +48,10 @@ $doc->addScriptDeclaration('
 			<div class="span9">
 				<fieldset class="adminform">
 					<?php echo $this->form->getInput('fulltext'); ?>
-					<hr>
-					<p class="lead"><?php echo Text::_('COM_INFO_ITEM_IMAGES'); ?></p>
-					<?php echo $this->form->getInput('images'); ?>
-					<hr>
-					<p class="lead"><?php echo Text::_('COM_INFO_ITEM_HEADER'); ?></p>
-					<?php echo $this->form->getInput('header'); ?>
 				</fieldset>
 			</div>
 			<div class="span3">
-				<div class="control-group">
+				<div class="control-group hidden">
 					<div class="well">
 						<div class="lead">
 							<?php echo Text::_('COM_INFO_ITEM_SHORTCODES'); ?>
@@ -99,15 +93,32 @@ $doc->addScriptDeclaration('
 			</div>
 			<div class="span3">
 				<fieldset class="form-vertical">
-					<?php echo $this->form->renderField('introimage'); ?>
+					<?php echo $this->form->renderField('list_item_layout', 'attribs'); ?>
 				</fieldset>
 			</div>
 		</div>
 		<?php echo HTMLHelper::_('bootstrap.endTab'); ?>
 
+		<?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'images', Text::_('COM_INFO_ITEM_IMAGES_FIELDSET')); ?>
+		<?php echo $this->form->renderField('imagefolder'); ?>
+		<p class="lead"><?php echo Text::_('COM_INFO_ITEM_IMAGES'); ?></p>
+		<?php echo $this->form->getInput('images'); ?>
+		<hr>
+		<p class="lead"><?php echo Text::_('COM_INFO_ITEM_HEADER'); ?>(1200 x 392)</p>
+		<?php echo $this->form->getInput('header'); ?>
+		<hr>
+		<?php echo $this->form->renderField('introimage'); ?>
+		<?php echo HTMLHelper::_('bootstrap.endTab'); ?>
+
 		<?php
 		echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'tags', Text::_('JTAG'));
 		echo $this->form->getInput('tags');
+		echo HTMLHelper::_('bootstrap.endTab');
+		?>
+
+		<?php
+		echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'attribs', Text::_('COM_INFO_ITEM_SETTINGS'));
+		echo $this->form->renderFieldset('attribs');
 		echo HTMLHelper::_('bootstrap.endTab');
 		?>
 
@@ -121,12 +132,6 @@ $doc->addScriptDeclaration('
 			</div>
 		</div>
 		<?php echo HTMLHelper::_('bootstrap.endTab'); ?>
-
-		<?php
-		echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'attribs', Text::_('JGLOBAL_FIELDSET_OPTIONS'));
-		echo $this->form->renderFieldset('attribs');
-		echo HTMLHelper::_('bootstrap.endTab');
-		?>
 
 		<?php echo HTMLHelper::_('bootstrap.endTabSet'); ?>
 	</div>

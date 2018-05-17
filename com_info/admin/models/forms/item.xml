@@ -19,22 +19,35 @@
 			   hint="COM_INFO_ITEM_FULLTEXT"
 			   filter="JComponentHelper::filterText"
 			   buttons="true"/>
+
+	</fieldset>
+
+	<fieldset name="into" label="COM_INFO_ITEM_IMAGES">
 		<field name="introtext" type="editor"
 			   label="COM_INFO_ITEM_INTROTEXT"
 			   hint="COM_INFO_ITEM_INTROTEXT"
 			   filter="JComponentHelper::filterText"
 			   buttons="true"/>
+		<fields name="attribs">
+			<field name="list_item_layout" type="listitemlayout"
+				   label="COM_INFO_ITEM_LAYOUT"
+				   useglobal="true"/>
+		</fields>
+	</fieldset>
+
+	<fieldset name="images" label="COM_INFO_ITEM_IMAGES_FIELDSET">
+		<field name="imagefolder" type="imagefolder" path="images/info"/>
+		<field name="introimage" type="ajaximage"
+			   filename="intro"
+			   label="COM_INFO_ITEM_INTROIMAGE"/>
+		<field name="header" type="ajaximage"
+			   filename="header"
+			   label="COM_INFO_ITEM_HEADER"/>
 		<field name="images" type="ajaximage"
 			   label="COM_INFO_ITEM_IMAGES"
 			   multiple="true"
 			   subfolder="content"
 			   text="true"/>
-		<field name="header" type="ajaximage"
-			   filename="header"
-			   label="COM_INFO_ITEM_HEADER"/>
-		<field name="introimage" type="ajaximage"
-			   filename="intro"
-			   label="COM_INFO_ITEM_INTROIMAGE"/>
 	</fieldset>
 	<fieldset name="global">
 		<field name="in_work" type="radio"
@@ -44,37 +57,16 @@
 			<option value="1">JYES</option>
 			<option value="0">JNO</option>
 		</field>
-		<field name="state" type="list"
-			   label="JSTATUS"
-			   description="JFIELD_PUBLISHED_DESC"
-			   class="chzn-color-state"
-			   filter="intval"
-			   size="1"
-			   default="1">
-			<option value="1">JPUBLISHED</option>
-			<option value="0">JUNPUBLISHED</option>
-			<option value="-2">JTRASHED</option>
-		</field>
-		<field name="access" type="accesslevel"
-			   label="JFIELD_ACCESS_LABEL"
-			   description="JFIELD_ACCESS_DESC"
-			   size="1"/>
-		<field name="region" type="regions"
-			   label="JGLOBAL_FIELD_REGIONS_LABEL"
-			   description="JGLOBAL_FIELD_REGIONS_DESC"
-			   show_all="true"/>
-		<field name="imagefolder" type="imagefolder" path="images/info"/>
-	</fieldset>
-	<fieldset name="attribs" label="JGLOBAL_FIELDSET_OPTIONS">
 		<fields name="attribs">
 			<field name="item_layout" type="componentlayout"
-				   label="COM_INFO_PARAMS_ITEM_LAYOUT"
+				   label="COM_INFO_ITEM_LAYOUT"
 				   useglobal="true"
 				   extension="com_info"
 				   view="item"/>
-			<field name="list_item_layout" type="listitemlayout"
-				   label="COM_INFO_PARAMS_LIST_ITEM_LAYOUT"
-				   useglobal="true"/>
+		</fields>
+	</fieldset>
+	<fieldset name="attribs" label="JGLOBAL_FIELDSET_OPTIONS">
+		<fields name="attribs">
 			<field name="alternative_title" type="text"
 				   label="COM_INFO_ITEM_ALTERNATIVE_TITLE"
 				   class="input-xxlarge input-large-text"
@@ -126,6 +118,25 @@
 		<field name="created_by" type="user"
 			   label="JGLOBAL_FIELD_CREATED_BY_LABEL"
 			   description="JGLOBAL_FIELD_CREATED_BY_DESC"/>
+		<field name="state" type="list"
+			   label="JSTATUS"
+			   description="JFIELD_PUBLISHED_DESC"
+			   class="chzn-color-state"
+			   filter="intval"
+			   size="1"
+			   default="1">
+			<option value="1">JPUBLISHED</option>
+			<option value="0">JUNPUBLISHED</option>
+			<option value="-2">JTRASHED</option>
+		</field>
+		<field name="access" type="accesslevel"
+			   label="JFIELD_ACCESS_LABEL"
+			   description="JFIELD_ACCESS_DESC"
+			   size="1"/>
+		<field name="region" type="regions"
+			   label="JGLOBAL_FIELD_REGIONS_LABEL"
+			   description="JGLOBAL_FIELD_REGIONS_DESC"
+			   show_all="true"/>
 		<field name="hits" type="number"
 			   label="JGLOBAL_HITS"
 			   class="readonly"
