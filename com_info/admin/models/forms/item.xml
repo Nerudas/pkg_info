@@ -80,10 +80,22 @@
 				   class="input-xxlarge input-large-text"
 				   size="40"/>
 		</fields>
-		<field name="related" type="related"
+		<field name="related" type="subform"
 			   label="COM_INFO_ITEM_RELATED"
 			   class="input-xlarge"
-			   multiple="true"/>
+			   multiple="true">
+			<form>
+				<field name="item_id" type="related"
+					   label="COM_INFO_ITEM_RELATED_ITEM_ID"
+					   class="input-xxlarge"
+					   default="">
+					<option value="">COM_INFO_ITEM_RELATED_ITEM_ID_SELECT</option>
+				</field>
+				<field name="title" type="text"
+					   label="COM_INFO_ITEM_RELATED_ITEM_TITLE"
+					   class="input-xxlarge input-large-text"/>
+			</form>
+		</field>
 	</fieldset>
 	<fieldset name="publishingdata" label="">
 		<field name="created" type="calendar"

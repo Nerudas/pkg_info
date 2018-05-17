@@ -232,8 +232,6 @@ class InfoModelList extends ListModel
 			{
 				$query->where('i.state IN (' . implode(',', $published) . ')');
 			}
-
-
 		}
 
 		// Filter by regions

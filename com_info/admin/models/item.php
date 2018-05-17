@@ -71,6 +71,10 @@ class InfoModelItem extends AdminModel
 			$registry      = new Registry($item->attribs);
 			$item->attribs = $registry->toArray();
 
+			// Convert the related field to an array.
+			$registry      = new Registry($item->related);
+			$item->related = $registry->toArray();
+
 			// Get Tags
 			$item->tags = new TagsHelper;
 			$item->tags->getTagIds($item->id, 'com_info.item');
@@ -237,7 +241,12 @@ class InfoModelItem extends AdminModel
 			$data['metadata'] = (string) $registry;
 		}
 
-		$data['related'] = (isset($data['related'])) ? implode(',', $data['related']) : '';
+
+		if (isset($data['related']) && is_array($data['related']))
+		{
+			$registry        = new Registry($data['related']);
+			$data['related'] = (string) $registry;
+		}
 
 		if (empty($data['created_by']))
 		{

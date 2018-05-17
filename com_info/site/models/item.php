@@ -20,7 +20,6 @@ use Joomla\CMS\Helper\TagsHelper;
 use Joomla\CMS\Table\Table;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Component\ComponentHelper;
-use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 
 class InfoModelItem extends ItemModel
 {
@@ -260,12 +259,71 @@ class InfoModelItem extends ItemModel
 
 		if (!isset($this->_related[$pk]))
 		{
-			$item  = $this->getItem($pk);
-			$model = BaseDatabaseModel::getInstance('List', 'InfoModel', array('ignore_request' => true));
-			$model->setState('tag.id', 1);
-			$model->setState('filter.item_id', explode(',', $item->related));
+			$item     = $this->getItem($pk);
+			$registry = new Registry($item->related);
+			$array    = $registry->toArray();
 
-			$this->_related[$pk] = $model->getItems();
+			$related = array();
+			foreach ($array as $object)
+			{
+				$object['id'] = (isset($object['item_id'])) ? $object['item_id'] : 0;
+				unset($object['item_id']);
+				if (!empty($object['id']) && $object['id'] !== $item->id)
+				{
+					$related[$object['id']] = new Registry($object);
+				}
+			}
+
+			if (!empty($related))
+			{
+				$itemIds = implode(',', array_keys($related));
+				$user    = Factory::getUser();
+
+				$db    = Factory::getDbo();
+				$query = $db->getQuery(true)
+					->select(array('id', 'title as item_title', 'introimage as image'))
+					->from($db->quoteName('#__info', 'i'))
+					->where('i.id IN (' . $itemIds . ')')
+					->group(array('i.id'));
+
+				// Filter by access level
+				if (!$user->authorise('core.admin'))
+				{
+					$groups = implode(',', $user->getAuthorisedViewLevels());
+					$query->where('i.access IN (' . $groups . ')');
+				}
+
+				// Filter by published state.
+				$published = $this->getState('filter.published');
+				if (!empty($published))
+				{
+					if (is_numeric($published))
+					{
+						$query->where('( i.state = ' . (int) $published .
+							' OR ( i.created_by = ' . $user->id . ' AND i.state IN (0,1)))');
+						$query->where('(i.in_work = 0 OR i.created_by = ' . $user->id . ')');
+					}
+					elseif (is_array($published))
+					{
+						$query->where('i.state IN (' . implode(',', $published) . ')');
+					}
+				};
+
+				$db->setQuery($query);
+				$objects = $db->loadObjectList('id');
+				foreach ($objects as $id => $object)
+				{
+					$relatedObject = &$related[$id];
+					$image         = (!empty($object->image) && JFile::exists(JPATH_ROOT . '/' . $object->image)) ?
+						Uri::root(true) . '/' . $object->image : false;
+
+					$relatedObject->set('image', $image);
+					$relatedObject->set('item_title', $object->item_title);
+					$relatedObject->set('link', Route::_(InfoHelperRoute::getItemRoute($object->id)));
+				}
+			}
+
+			$this->_related[$pk] = $related;
 		}
 
 		return $this->_related[$pk];

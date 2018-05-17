@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS `#__info` (
   `introimage`   TEXT             NOT NULL DEFAULT '',
   `header`       TEXT             NOT NULL DEFAULT '',
   `images`       LONGTEXT         NOT NULL DEFAULT '',
-  `related`      TEXT             NOT NULL DEFAULT '',
+  `related`      LONGTEXT         NOT NULL DEFAULT '',
   `state`        TINYINT(3)       NOT NULL DEFAULT '0',
   `created`      DATETIME         NOT NULL DEFAULT '0000-00-00 00:00:00',
 	`created_by`   INT(11)          NOT NULL DEFAULT '0',
