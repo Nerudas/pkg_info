@@ -22,7 +22,7 @@
 	</files>
 	<updateservers>
 		<server type="extension" priority="1" name="Information Package">
-			https://site.com/update?extension=pkg_info
+			https://update.nerudas.ru/?extension=pkg_info
 		</server>
 	</updateservers>
 </extension>
