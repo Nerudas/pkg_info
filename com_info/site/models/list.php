@@ -196,6 +196,11 @@ class InfoModelList extends ListModel
 			->join('LEFT', '#__regions AS r ON r.id = 
 					(CASE i.region WHEN ' . $db->quote('*') . ' THEN 100 ELSE i.region END)');
 
+		// Join over the discussions.
+		$query->select('(CASE WHEN dt.id IS NOT NULL THEN dt.id ELSE 0 END) as discussions_topic_id')
+			->join('LEFT', '#__discussions_topics AS dt ON dt.item_id = i.id AND ' .
+				$db->quoteName('dt.context') . ' = ' . $db->quote('com_info.item'));
+
 		// Filter by access level
 		if (!$user->authorise('core.admin'))
 		{
@@ -324,6 +329,7 @@ class InfoModelList extends ListModel
 		if (!empty($items))
 		{
 			$mainTag = ComponentHelper::getParams('com_info')->get('tags');
+			JLoader::register('DiscussionsHelperTopic', JPATH_SITE . '/components/com_discussions/helpers/topic.php');
 
 			foreach ($items as &$item)
 			{
@@ -363,6 +369,9 @@ class InfoModelList extends ListModel
 				$item->introtext = str_replace('{id}', $item->id, $item->introtext);
 				$item->introtext = str_replace('{title}', $item->title, $item->introtext);
 				$item->introtext = str_replace('{imageFolder}', $item->imageFolder . '/content', $item->introtext);
+
+				// Discussions posts count
+				$item->commentsCount = DiscussionsHelperTopic::getPostsTotal($item->discussions_topic_id);
 			}
 		}
 

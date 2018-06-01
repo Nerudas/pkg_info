@@ -62,6 +62,16 @@ class InfoViewItem extends HtmlView
 	 */
 	protected $related;
 
+
+	/**
+	 * Current item comments;
+	 *
+	 * @var    array
+	 *
+	 * @since 1.0.0
+	 */
+	protected $comments;
+
 	/**
 	 * Display the view
 	 *
@@ -79,11 +89,12 @@ class InfoViewItem extends HtmlView
 		$user       = Factory::getUser();
 		$dispatcher = JEventDispatcher::getInstance();
 
-		$this->item    = $this->get('Item');
-		$this->link    = $this->item->link;
-		$this->related = $this->get('Related');
-		$this->state   = $this->get('State');
-		$this->user    = $user;
+		$this->item     = $this->get('Item');
+		$this->link     = $this->item->link;
+		$this->related  = $this->get('Related');
+		$this->comments = $this->get('Comments');
+		$this->state    = $this->get('State');
+		$this->user     = $user;
 
 		// Check for errors.
 		if (count($errors = $this->get('Errors')))
@@ -154,8 +165,6 @@ class InfoViewItem extends HtmlView
 			}
 		}
 
-		$offset = $this->state->get('list.offset');
-
 		/* Check for no 'access-view',
 		 * - Redirect guest users to login
 		 * - Deny access to logged users with 403 code
@@ -180,6 +189,7 @@ class InfoViewItem extends HtmlView
 
 		// Process the content plugins.
 		PluginHelper::importPlugin('content');
+		$offset = $app->input->getUInt('limitstart');
 		$item->text = &$item->fulltext;
 		$dispatcher->trigger('onContentPrepare', array('com_info.item', &$item, &$item->params, $offset));
 

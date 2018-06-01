@@ -41,6 +41,14 @@ class InfoModelItem extends ItemModel
 	protected $_related = array();
 
 	/**
+	 * Comments
+	 *
+	 * @var    object
+	 * @since  1.0.0
+	 */
+	protected $_comments = array();
+
+	/**
 	 * Constructor.
 	 *
 	 * @param   array $config An optional associative array of configuration settings.
@@ -123,6 +131,11 @@ class InfoModelItem extends ItemModel
 					->select('i.*')
 					->from('#__info AS i')
 					->where('i.id = ' . (int) $pk);
+
+				// Join over the discussions.
+				$query->select('(CASE WHEN dt.id IS NOT NULL THEN dt.id ELSE 0 END) as discussions_topic_id')
+					->join('LEFT', '#__discussions_topics AS dt ON dt.item_id = i.id AND ' .
+						$db->quoteName('dt.context') . ' = ' . $db->quote('com_info.item'));
 
 				// Join over the regions.
 				$query->select(array('r.id as region_id', 'r.name AS region_name', 'r.latitude as region_latitude',
@@ -245,7 +258,7 @@ class InfoModelItem extends ItemModel
 
 
 	/**
-	 * Method to get company employees
+	 * Method to get Related items
 	 *
 	 * @param int $pk Item ID
 	 *
@@ -327,6 +340,36 @@ class InfoModelItem extends ItemModel
 		}
 
 		return $this->_related[$pk];
+	}
+
+	/**
+	 * Method to get Related items
+	 *
+	 * @param int $pk Item ID
+	 *
+	 * @return  object
+	 *
+	 * @since 1.0.0
+	 */
+	public function getComments($pk = null)
+	{
+		$pk = (!empty($pk)) ? $pk : (int) $this->getState('item.id');
+		if (!isset($this->_comments[$pk]))
+		{
+			$item = $this->getItem($pk);
+
+			JLoader::register('DiscussionsHelperTopic', JPATH_SITE . '/components/com_discussions/helpers/topic.php');
+			$data             = array();
+			$data['context']  = 'com_info.item';
+			$data['item_id']  = $item->id;
+			$data['topic_id'] = $item->discussions_topic_id;
+
+			$comments             = DiscussionsHelperTopic::getIntegration($data);
+			$this->_comments[$pk] = $comments;
+
+		}
+
+		return $this->_comments[$pk];
 	}
 
 }
