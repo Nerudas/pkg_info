@@ -364,6 +364,19 @@ class InfoModelItem extends ItemModel
 			$data['item_id']  = $item->id;
 			$data['topic_id'] = $item->discussions_topic_id;
 
+			$data['create_topic'] = array(
+				'context'    => 'com_info.item',
+				'title'      => $item->title,
+				'text'       => '{info id="' . $item->id . '" layout="discussions"}',
+				'item_id'    => $item->id,
+				'state'      => $item->state,
+				'access'     => $item->access,
+				'created_by' => $item->created_by,
+				'region'     => $item->region,
+				'tags'       => (!empty($item->tags->itemTags)) ?
+					implode(',', ArrayHelper::getColumn($item->tags->itemTags, 'tag_id')) : ''
+			);
+
 			$comments             = DiscussionsHelperTopic::getIntegration($data);
 			$this->_comments[$pk] = $comments;
 
