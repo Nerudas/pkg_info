@@ -19,6 +19,7 @@
 		<folder type="module" id="mod_info_admin" client="administrator">mod_info_admin</folder>
 		<folder type="module" id="mod_info_latest" client="site">mod_info_latest</folder>
 		<folder type="module" id="mod_info_tags" client="site">mod_info_tags</folder>
+		<folder type="plugin" id="info_shortcodes" group="system">plg_system_info_shortcodes</folder>
 	</files>
 	<updateservers>
 		<server type="extension" priority="1" name="Information Package">

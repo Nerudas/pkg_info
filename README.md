@@ -22,3 +22,6 @@ Module for displaying the latest information items
 
 * **Information - Tags Module**  
 Module for displaying information tags
+
+* **System - Information Shortcodes Plugin**  
+Plugin for displaying information items via shortcodes
