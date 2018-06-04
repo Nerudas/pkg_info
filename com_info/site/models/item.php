@@ -366,9 +366,9 @@ class InfoModelItem extends ItemModel
 
 			$data['create_topic'] = array(
 				'context'    => 'com_info.item',
+				'item_id'    => $item->id,
 				'title'      => $item->title,
 				'text'       => '{info id="' . $item->id . '" layout="discussions"}',
-				'item_id'    => $item->id,
 				'state'      => $item->state,
 				'access'     => $item->access,
 				'created_by' => $item->created_by,

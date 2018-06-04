@@ -328,6 +328,22 @@ class InfoModelItem extends AdminModel
 				}
 			}
 
+			// Update discussion
+			JLoader::register('DiscussionsHelperTopic', JPATH_SITE . '/components/com_discussions/helpers/topic.php');
+			$topicData               = array();
+			$topicData['context']    = 'com_info.item';
+			$topicData['item_id']    = $id;
+			$topicData['title']      = $data['title'];
+			$topicData['text']       = '{info id="' . $id . '" layout="discussions"}';
+			$topicData['state']      = $data['state'];
+			$topicData['access']     = $data['access'];
+			$topicData['created_by'] = $data['created_by'];
+			$topicData['region']     = $data['region'];
+			$topicData['tags']       = $data['tags'];
+
+			DiscussionsHelperTopic::updateTopic($topicData);
+
+
 			return $id;
 		}
 
