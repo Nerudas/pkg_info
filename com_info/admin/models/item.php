@@ -470,29 +470,27 @@ class InfoModelItem extends AdminModel
 		}
 
 		// Check tags
-		$parent = (int) ComponentHelper::getParams('com_info')->get('tags');
-		$db     = Factory::getDbo();
-		$query  = $db->getQuery(true)
-			->select('t.alias')
-			->from($db->quoteName('#__tags', 't'))
-			->where($db->quoteName('t.alias') . ' <>' . $db->quote('root'));
-		if ($parent > 1)
-		{
-			$query->where('(t.id = ' . $parent . ' OR t.parent_id = ' . $parent . ')');
-		}
-		else
-		{
-			$query->where('t.parent_id = 1');
-		}
-		$db->setQuery($query);
-		$tags = $db->loadColumn();
-		if (in_array($alias, $tags))
-		{
-			$response->status = 'error';
-			$response->msg    = Text::_('COM_INFO_ERROR_ALIAS_EXIST');
-			$response->data   = $default_alias;
+		$tags = (int) ComponentHelper::getParams('com_info')->get('tags');
 
-			return $response;
+		if (!empty($tags) && is_array($tags))
+		{
+			$db    = Factory::getDbo();
+			$query = $db->getQuery(true)
+				->select('t.alias')
+				->from($db->quoteName('#__tags', 't'))
+				->where($db->quoteName('t.alias') . ' <>' . $db->quote('root'))
+				->where('t.id IN (' . implode(',', $tags) . ')');
+
+			$db->setQuery($query);
+			$tags = $db->loadColumn();
+			if (in_array($alias, $tags))
+			{
+				$response->status = 'error';
+				$response->msg    = Text::_('COM_INFO_ERROR_ALIAS_EXIST');
+				$response->data   = $default_alias;
+
+				return $response;
+			}
 		}
 
 		return $response;

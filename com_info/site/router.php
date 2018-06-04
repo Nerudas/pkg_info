@@ -16,7 +16,6 @@ use Joomla\CMS\Component\Router\RouterViewConfiguration;
 use Joomla\CMS\Component\Router\Rules\MenuRules;
 use Joomla\CMS\Component\Router\Rules\NomenuRules;
 use Joomla\CMS\Component\Router\Rules\StandardRules;
-use Joomla\CMS\Component\ComponentHelper;
 
 class InfoRouter extends RouterView
 {
@@ -61,17 +60,19 @@ class InfoRouter extends RouterView
 	{
 		$path = array();
 
-		$db      = Factory::getDbo();
-		$dbquery = $db->getQuery(true)
-			->select(array('id', 'alias', 'parent_id'))
-			->from('#__tags')
-			->where('id =' . $id);
-		$db->setQuery($dbquery);
-		$tag = $db->loadObject();
-
-		if ($tag)
+		if ($id > 0)
 		{
-			$path[$tag->id] = $tag->alias;
+			$db      = Factory::getDbo();
+			$dbquery = $db->getQuery(true)
+				->select(array('id', 'alias', 'parent_id'))
+				->from('#__tags')
+				->where('id =' . $id);
+			$db->setQuery($dbquery);
+			$tag = $db->loadObject();
+			if ($tag)
+			{
+				$path[$tag->id] = $tag->alias;
+			}
 		}
 
 		$path[1] = 'root';
@@ -120,27 +121,22 @@ class InfoRouter extends RouterView
 	 */
 	public function getListId($segment, $query)
 	{
-		if (isset($query['id']))
+		if (!empty($segment))
 		{
-			$parent = (int) ComponentHelper::getParams('com_info')->get('tags', 1);
-
-			// Get tags
+			preg_match('/^id(.*)/', $segment, $matches);
+			$id = (!empty($matches[1])) ? (int) $matches[1] : 0;
+			if (!empty($id))
+			{
+				return $id;
+			}
 			$db      = Factory::getDbo();
 			$dbquery = $db->getQuery(true)
-				->select(array('t.id', 't.alias'))
-				->from($db->quoteName('#__tags', 't'))
-				->where($db->quoteName('t.alias') . ' <>' . $db->quote('root'))
-				->where('t.parent_id = ' . $parent);
+				->select('id')
+				->from('#__tags')
+				->where($db->quoteName('alias') . ' = ' . $db->quote($segment));
 			$db->setQuery($dbquery);
-			$tags = $db->loadObjectList();
 
-			foreach ($tags as $tag)
-			{
-				if ($tag->alias == $segment)
-				{
-					return $tag->id;
-				}
-			}
+			return (int) $db->loadResult();
 		}
 
 		return false;

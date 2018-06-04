@@ -86,59 +86,56 @@ class JFormFieldInfoTags extends JFormFieldList
 	 */
 	protected function getOptions()
 	{
-		$parent = (int) ComponentHelper::getParams('com_info')->get('tags');
-
-		// Get tags
-		$db    = Factory::getDbo();
-		$query = $db->getQuery(true)
-			->select(array('t.id', 't.title'))
-			->from($db->quoteName('#__tags', 't'))
-			->where($db->quoteName('t.alias') . ' <>' . $db->quote('root'));
-		if ($parent > 1)
-		{
-			$query->where('(t.id = ' . $parent . ' OR t.parent_id = ' . $parent . ')');
-		}
-		else
-		{
-			$query->where('t.parent_id = 1');
-		}
-
-		$user = Factory::getUser();
-		if (!$user->authorise('core.admin'))
-		{
-			$query->where('t.access IN (' . implode(',', $user->getAuthorisedViewLevels()) . ')');
-		}
-		if (!$user->authorise('core.manage', 'com_tags'))
-		{
-			$query->where('t.published =  1');
-		}
-
-		$query->order($db->escape('t.lft') . ' ' . $db->escape('asc'));
-
-
-		$db->setQuery($query);
-		$tags = $db->loadObjectList();
-		if ($parent == 1)
-		{
-			$root        = new stdClass();
-			$root->title = Text::_('JGLOBAL_ROOT');
-			$root->id    = 1;
-			array_unshift($tags, $root);
-		}
-
+		$params  = ComponentHelper::getParams('com_info');
+		$tags    = $params->get('tags');
 		$options = parent::getOptions();
 
-		foreach ($tags as $i => $tag)
+		// Root
+		$root        = new stdClass();
+		$root->text  = Text::_($params->get('root_title', 'COM_INFO'));
+		$root->value = Route::_(InfoHelperRoute::getListRoute(1));
+		if ($this->value == $root->value)
 		{
-			$id            = ($tag->id != $parent) ? $tag->id : 1;
-			$option        = new stdClass();
-			$option->text  = $tag->title;
-			$option->value = Route::_(InfoHelperRoute::getListRoute($id));
-			if ($option->value == $this->value)
+			$root->selected = true;
+		}
+		$options[] = $root;
+
+		if (!empty($tags) && is_array($tags))
+		{
+			// Get tags
+			$db    = Factory::getDbo();
+			$query = $db->getQuery(true)
+				->select(array('t.id', 't.title'))
+				->from($db->quoteName('#__tags', 't'))
+				->where($db->quoteName('t.alias') . ' <>' . $db->quote('root'))
+				->where('t.id IN (' . implode(',', $tags) . ')');
+
+			$user = Factory::getUser();
+			if (!$user->authorise('core.admin'))
 			{
-				$option->selected = true;
+				$query->where('t.access IN (' . implode(',', $user->getAuthorisedViewLevels()) . ')');
 			}
-			$options[] = $option;
+			if (!$user->authorise('core.manage', 'com_tags'))
+			{
+				$query->where('t.published =  1');
+			}
+
+			$query->order($db->escape('t.lft') . ' ' . $db->escape('asc'));
+			$db->setQuery($query);
+			$objects = $db->loadObjectList();
+
+			foreach ($objects as $i => $tag)
+			{
+				$id            = $tag->id;
+				$option        = new stdClass();
+				$option->text  = $tag->title;
+				$option->value = Route::_(InfoHelperRoute::getListRoute($id));
+				if ($option->value == $this->value)
+				{
+					$option->selected = true;
+				}
+				$options[] = $option;
+			}
 		}
 
 		return $options;

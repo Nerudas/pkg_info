@@ -28,46 +28,44 @@ class JFormFieldInfoTags extends JFormFieldList
 	 */
 	protected function getOptions()
 	{
-		$parent = (int) ComponentHelper::getParams('com_info')->get('tags');
-
-		// Get tags
-		$db    = Factory::getDbo();
-		$query = $db->getQuery(true)
-			->select(array('t.id', 't.title'))
-			->from($db->quoteName('#__tags', 't'))
-			->where($db->quoteName('t.alias') . ' <>' . $db->quote('root'));
-		if ($parent > 1)
-		{
-			$query->where('(t.id = ' . $parent . ' OR t.parent_id = ' . $parent . ')');
-		}
-		else
-		{
-			$query->where('t.parent_id = 1');
-		}
-		$query->order($db->escape('t.lft') . ' ' . $db->escape('asc'));
-
-		$db->setQuery($query);
-		$tags = $db->loadObjectList();
-		if ($parent == 1)
-		{
-			$root        = new stdClass();
-			$root->title = Text::_('JGLOBAL_ROOT');
-			$root->id    = 1;
-			array_unshift($tags, $root);
-		}
-
+		$params  = ComponentHelper::getParams('com_info');
+		$tags    = $params->get('tags');
 		$options = parent::getOptions();
 
-		foreach ($tags as $i => $tag)
+		// Root
+		$root        = new stdClass();
+		$root->text = Text::_($params->get('root_title', 'COM_INFO'));
+		$root->value    = 1;
+		if ($this->value == $root->value)
 		{
-			$option        = new stdClass();
-			$option->text  = $tag->title;
-			$option->value = ($tag->id != $parent) ? $tag->id : 1;
-			if ($option->value == $this->value)
+			$root->selected = true;
+		}
+		$options[] = $root;
+
+		if (!empty($tags) && is_array($tags))
+		{
+			// Get tags
+			$db    = Factory::getDbo();
+			$query = $db->getQuery(true)
+				->select(array('t.id', 't.title'))
+				->from($db->quoteName('#__tags', 't'))
+				->where($db->quoteName('t.alias') . ' <>' . $db->quote('root'))
+				->where('t.id IN (' . implode(',', $tags) . ')')
+				->order($db->escape('t.lft') . ' ' . $db->escape('asc'));
+			$db->setQuery($query);
+			$objects = $db->loadObjectList();
+
+			foreach ($objects as $i => $tag)
 			{
-				$option->selected = true;
+				$option        = new stdClass();
+				$option->text  = $tag->title;
+				$option->value = $tag->id;
+				if ($option->value == $this->value)
+				{
+					$option->selected = true;
+				}
+				$options[] = $option;
 			}
-			$options[] = $option;
 		}
 
 		return $options;
