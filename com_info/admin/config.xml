@@ -26,7 +26,7 @@
 		<field name="list_item_layout" type="listitemlayout"
 			   addfieldpath="/administrator/components/com_info/models/fields"
 			   label="COM_INFO_PARAMS_LIST_ITEM_LAYOUT"/>
-		<field name="company_layout" type="componentlayout"
+		<field name="item_layout" type="componentlayout"
 			   label="COM_INFO_PARAMS_ITEM_LAYOUT"
 			   extension="com_info"
 			   view="item"/>

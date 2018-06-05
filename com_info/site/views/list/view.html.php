@@ -136,7 +136,7 @@ class InfoViewList extends HtmlView
 		{
 			$currentLink = $active->link;
 			// Load layout from active query (in case it is an alternative menu item)
-			if (strpos($currentLink, 'view=companies') && isset($active->query['layout']))
+			if (strpos($currentLink, 'view=list') && isset($active->query['layout']))
 			{
 				$this->setLayout($active->query['layout']);
 			}

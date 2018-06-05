@@ -103,7 +103,7 @@ $columns = 9;
 							<?php
 							if ($canChange)
 							{
-								HTMLHelper::_('actionsdropdown.' . ((int) $item->state === -2 ? 'un' : '') . 'trash', 'cb' . $i, 'companies');
+								HTMLHelper::_('actionsdropdown.' . ((int) $item->state === -2 ? 'un' : '') . 'trash', 'cb' . $i, 'items');
 								echo HTMLHelper::_('actionsdropdown.render', $this->escape($item->title));
 							}
 							?>
