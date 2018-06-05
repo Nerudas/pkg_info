@@ -371,11 +371,8 @@ class InfoModelList extends ListModel
 				$item->introtext = str_replace('{imageFolder}', $item->imageFolder . '/content', $item->introtext);
 
 				// Discussions posts count
-				$item->commentsCount = 0;
-				if (Factory::getApplication()->input->get('option') !== 'com_discussions')
-				{
-					$item->commentsCount = DiscussionsHelperTopic::getPostsTotal($item->discussions_topic_id);
-				}
+				$item->commentsCount = DiscussionsHelperTopic::getPostsTotal($item->discussions_topic_id);
+
 			}
 		}
 
