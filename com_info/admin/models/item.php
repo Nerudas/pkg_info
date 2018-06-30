@@ -188,11 +188,13 @@ class InfoModelItem extends AdminModel
 		$filter = InputFilter::getInstance();
 		$table  = $this->getTable();
 		$db     = Factory::getDbo();
+		$isNew  = true;
 
 		// Load the row if saving an existing type.
 		if ($pk > 0)
 		{
 			$table->load($pk);
+			$isNew = false;
 		}
 
 		$data['id']    = (!isset($data['id'])) ? 0 : $data['id'];
@@ -287,6 +289,13 @@ class InfoModelItem extends AdminModel
 			// Save images
 			$data['imagefolder'] = (!empty($data['imagefolder'])) ? $data['imagefolder'] :
 				$this->imageFolderHelper->getItemImageFolder($id);
+
+			if ($isNew)
+			{
+				$data['introimage'] = (isset($data['introimage'])) ? $data['introimage'] : '';
+				$data['header']     = (isset($data['header'])) ? $data['header'] : '';
+				$data['images']     = (isset($data['images'])) ? $data['images'] : array();
+			}
 
 			if (isset($data['introimage']))
 			{
