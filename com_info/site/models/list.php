@@ -328,7 +328,7 @@ class InfoModelList extends ListModel
 		$items = parent::getItems();
 		if (!empty($items))
 		{
-			$mainTag = ComponentHelper::getParams('com_info')->get('tags');
+			$mainTags = ComponentHelper::getParams('com_info')->get('tags');
 			JLoader::register('DiscussionsHelperTopic', JPATH_SITE . '/components/com_discussions/helpers/topic.php');
 
 			foreach ($items as &$item)
@@ -357,7 +357,7 @@ class InfoModelList extends ListModel
 				{
 					foreach ($item->tags->itemTags as &$tag)
 					{
-						$tag->main = ($tag->parent_id == $mainTag);
+						$tag->main = (in_array($tag->id, $mainTags));
 					}
 
 					$item->tags->itemTags = ArrayHelper::sortObjects($item->tags->itemTags, 'main', -1);
