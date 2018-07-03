@@ -11,6 +11,7 @@
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Helper\ModuleHelper;
+use Joomla\CMS\Factory;
 
 // Include Route Helper
 JLoader::register('InfoHelperRoute', JPATH_SITE . '/components/com_info/helpers/route.php');
