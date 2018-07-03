@@ -18,6 +18,10 @@ use Joomla\CMS\Router\Route;
 // Include route helper
 JLoader::register('InfoHelperRoute', JPATH_SITE . '/components/com_info/helpers/route.php');
 
+// Load languages
+$language = Factory::getLanguage();
+$language->load('com_info', JPATH_SITE, $language->getTag(), true);
+
 // Initialize model
 BaseDatabaseModel::addIncludePath(JPATH_ROOT . '/components/com_info/models');
 $model = BaseDatabaseModel::getInstance('List', 'InfoModel', array('ignore_request' => true));

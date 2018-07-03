@@ -32,6 +32,10 @@ class JFormFieldInfoTags extends JFormFieldList
 		$tags    = $params->get('tags');
 		$options = parent::getOptions();
 
+		// Load languages
+		$language = Factory::getLanguage();
+		$language->load('com_info', JPATH_ADMINISTRATOR, $language->getTag(), true);
+
 		// Root
 		$root        = new stdClass();
 		$root->text = Text::_($params->get('root_title', 'COM_INFO'));

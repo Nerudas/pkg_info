@@ -18,6 +18,10 @@ JLoader::register('InfoHelperRoute', JPATH_SITE . '/components/com_info/helpers/
 // Include Module Helper
 require_once __DIR__ . '/helper.php';
 
+// Load languages
+$language = Factory::getLanguage();
+$language->load('com_info', JPATH_SITE, $language->getTag(), true);
+
 $tags = modInfoTagsHelper::getTags($params);
 
 
