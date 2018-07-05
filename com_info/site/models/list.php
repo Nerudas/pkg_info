@@ -328,7 +328,7 @@ class InfoModelList extends ListModel
 		$items = parent::getItems();
 		if (!empty($items))
 		{
-			$mainTags = ComponentHelper::getParams('com_info')->get('tags');
+			$mainTags = ComponentHelper::getParams('com_info')->get('tags', array());
 			JLoader::register('DiscussionsHelperTopic', JPATH_SITE . '/components/com_discussions/helpers/topic.php');
 
 			foreach ($items as &$item)

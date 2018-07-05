@@ -266,7 +266,7 @@ class InfoModelItems extends ListModel
 
 		if (!empty($items))
 		{
-			$mainTags = ComponentHelper::getParams('com_info')->get('tags');
+			$mainTags = ComponentHelper::getParams('com_info')->get('tags', array());
 
 			foreach ($items as &$item)
 			{
