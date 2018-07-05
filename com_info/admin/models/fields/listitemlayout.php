@@ -38,7 +38,7 @@ class JFormFieldListItemLayout extends JFormFieldList
 	{
 		$options = parent::getOptions();
 
-		$path = '/layouts/components/com_info/list/item';
+		$path = '/layouts/components/com_info/listitems';
 
 		$files = array();
 

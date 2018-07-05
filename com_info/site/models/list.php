@@ -347,7 +347,7 @@ class InfoModelList extends ListModel
 				{
 					$layout = $this->getItemLayout($layout);
 				}
-				$item->layout = 'components.com_info.list.item.' . $layout;
+				$item->layout = 'components.com_info.listitems.' . $layout;
 
 				// Get Tags
 				$item->tags = new TagsHelper;
@@ -395,7 +395,7 @@ class InfoModelList extends ListModel
 			return $this->_itemLayouts[$layout];
 		}
 
-		$path = '/layouts/components/com_info/list/item/' . $layout . '.php';
+		$path = '/layouts/components/com_info/listitems/' . $layout . '.php';
 		if (JFile::exists(JPATH_ROOT . $path))
 		{
 			$this->_itemLayouts[$layout] = $layout;
@@ -487,18 +487,15 @@ class InfoModelList extends ListModel
 	{
 		if (!is_object($this->_tag))
 		{
-			$app = Factory::getApplication();
-			$pk  = (!empty($pk)) ? (int) $pk : (int) $this->getState('tag.id', $app->input->get('id', 1));
+			$app    = Factory::getApplication();
+			$pk     = (!empty($pk)) ? (int) $pk : (int) $this->getState('tag.id', $app->input->get('id', 1));
+			$tag_id = $pk;
 
 			$root            = new stdClass();
 			$root->title     = Text::_('JGLOBAL_ROOT');
 			$root->id        = 1;
 			$root->parent_id = 0;
 			$root->link      = Route::_(InfoHelperRoute::getListRoute(1));
-
-			$mainTag = ComponentHelper::getParams('com_info')->get('tags', 1);
-
-			$tag_id = ($pk > 1) ? $pk : $mainTag;
 
 			if ($tag_id > 1)
 			{
@@ -532,13 +529,6 @@ class InfoModelList extends ListModel
 
 						return false;
 					}
-					if ($data->id == $mainTag)
-					{
-						$root->title = $data->title;
-
-						$data = $root;
-					}
-
 
 					$data->link = Route::_(InfoHelperRoute::getListRoute($data->id));
 
