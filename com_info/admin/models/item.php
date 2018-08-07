@@ -21,6 +21,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Filter\OutputFilter;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 
 class InfoModelItem extends AdminModel
 {
@@ -221,10 +222,13 @@ class InfoModelItem extends AdminModel
 			$data['publish_up'] = $data['created'];
 		}
 
+		BaseDatabaseModel::addIncludePath(JPATH_SITE . '/components/com_location/models', 'LocationModel');
+		$regionsModel = BaseDatabaseModel::getInstance('Regions', 'LocationModel', array('ignore_request' => false));
 		if (empty($data['region']))
 		{
-			$data['region'] = $app->input->cookie->get('region', '*');
+			$data['region'] = $regionsModel->getDefaultRegion()->id;
 		}
+		$region = $regionsModel->getRegion($data['region']);
 
 		if (isset($data['metadata']) && isset($data['metadata']['author']))
 		{
@@ -253,6 +257,12 @@ class InfoModelItem extends AdminModel
 		if (empty($data['created_by']))
 		{
 			$data['created_by'] = Factory::getUser()->id;
+		}
+
+		$data['tags'] = (is_array($data['tags'])) ? $data['tags'] : array();
+		if ($region && !empty($region->items_tags))
+		{
+			$data['tags'] = array_unique(array_merge($data['tags'], explode(',', $region->items_tags)));
 		}
 
 		// Get tags search
