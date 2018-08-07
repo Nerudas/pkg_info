@@ -192,9 +192,8 @@ class InfoModelList extends ListModel
 			->from($db->quoteName('#__info', 'i'));
 
 		// Join over the regions.
-		$query->select(array('r.id as region_id', 'r.name AS region_name'))
-			->join('LEFT', '#__regions AS r ON r.id = 
-					(CASE i.region WHEN ' . $db->quote('*') . ' THEN 100 ELSE i.region END)');
+		$query->select(array('r.id as region_id', 'r.name as region_name', 'r.icon as region_icon'))
+			->join('LEFT', '#__location_regions AS r ON r.id = i.region');
 
 		// Join over the discussions.
 		$query->select('(CASE WHEN dt.id IS NOT NULL THEN dt.id ELSE 0 END) as discussions_topic_id')
@@ -237,19 +236,6 @@ class InfoModelList extends ListModel
 			{
 				$query->where('i.state IN (' . implode(',', $published) . ')');
 			}
-		}
-
-		// Filter by regions
-		$region = $this->getState('filter.region');
-		if (is_numeric($region))
-		{
-			JModelLegacy::addIncludePath(JPATH_SITE . '/components/com_nerudas/models');
-			$regionModel = JModelLegacy::getInstance('regions', 'NerudasModel');
-			$regions     = $regionModel->getRegionsIds($region);
-			$regions[]   = $db->quote('*');
-			$regions[]   = $regionModel->getRegion($region)->parent;
-			$regions     = array_unique($regions);
-			$query->where($db->quoteName('i.region') . ' IN (' . implode(',', $regions) . ')');
 		}
 
 		// Filter by tag.
@@ -364,6 +350,15 @@ class InfoModelList extends ListModel
 				}
 
 				$item->imageFolder = $this->imageFolderHelper->getItemImageFolder($item->id);
+
+				// Get region
+				$item->region_icon = (!empty($item->region_icon) && JFile::exists(JPATH_ROOT . '/' . $item->region_icon)) ?
+					Uri::root(true) . $item->region_icon : false;
+				if ($item->region == '*')
+				{
+					$item->region_icon = false;
+					$item->region_name = Text::_('JGLOBAL_FIELD_REGIONS_ALL');
+				}
 
 				// Shortcodes
 				$item->introtext = str_replace('{id}', $item->id, $item->introtext);
