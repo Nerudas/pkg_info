@@ -25,3 +25,6 @@ Module for displaying information tags
 
 * **System - Information Shortcodes Plugin**  
 Plugin for displaying information items via shortcodes
+
+* **Sitemap - Information Plugin**  
+Plugin for adding the Info section to sitemap
