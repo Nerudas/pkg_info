@@ -107,7 +107,7 @@ class plgSitemapInfo extends CMSPlugin
 				$tags_urls[] = $url;
 			}
 
-			$this->_urls = $tags_urls + $items_urls;
+			$this->_urls = array_merge($tags_urls, $items_urls);
 		}
 
 		return $this->_urls;
