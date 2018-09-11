@@ -23,33 +23,18 @@ use Joomla\CMS\Form\Form;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
 
+JLoader::register('FieldTypesFilesHelper', JPATH_PLUGINS . '/fieldtypes/files/helper.php');
+
 class InfoModelItem extends AdminModel
 {
 	/**
-	 * Imagefolder helper helper
+	 * Images root path
 	 *
-	 * @var    new imageFolderHelper
+	 * @var    string
 	 *
-	 * @since  1.0.0
+	 * @since  1.2.0
 	 */
-	protected $imageFolderHelper = null;
-
-	/**
-	 * Constructor.
-	 *
-	 * @param   array $config An optional associative array of configuration settings.
-	 *
-	 * @see     AdminModel
-	 *
-	 * @since   1.0.0
-	 */
-	public function __construct($config = array())
-	{
-		JLoader::register('imageFolderHelper', JPATH_PLUGINS . '/fieldtypes/ajaximage/helpers/imagefolder.php');
-		$this->imageFolderHelper = new imageFolderHelper('images/info');
-
-		parent::__construct($config);
-	}
+	protected $images_root = 'images/info/items';
 
 	/**
 	 * Method to get a single record.
@@ -144,12 +129,8 @@ class InfoModelItem extends AdminModel
 		$form->setFieldAttribute('alias', 'checkurl',
 			Uri::base(true) . '/index.php?option=com_info&task=item.checkAlias');
 
-		// Set update images links
-		$saveurl = Uri::base(true) . '/index.php?option=com_info&task=item.updateImages&id='
-			. $id . '&field=';
-		$form->setFieldAttribute('introimage', 'saveurl', $saveurl . 'introimage');
-		$form->setFieldAttribute('header', 'saveurl', $saveurl . 'header');
-		$form->setFieldAttribute('images', 'saveurl', $saveurl . 'images');
+		// Set images folder root
+		$form->setFieldAttribute('images_folder', 'root', $this->images_root);
 
 		return $form;
 	}
@@ -297,29 +278,12 @@ class InfoModelItem extends AdminModel
 			$id = $this->getState($this->getName() . '.id');
 
 			// Save images
-			$data['imagefolder'] = (!empty($data['imagefolder'])) ? $data['imagefolder'] :
-				$this->imageFolderHelper->getItemImageFolder($id);
-
-			if ($isNew)
+			if ($isNew && !empty($data['images_folder']))
 			{
-				$data['introimage'] = (isset($data['introimage'])) ? $data['introimage'] : '';
-				$data['header']     = (isset($data['header'])) ? $data['header'] : '';
-				$data['images']     = (isset($data['images'])) ? $data['images'] : array();
+				$filesHelper = new FieldTypesFilesHelper();
+				$filesHelper->moveTemporaryFolder($data['images_folder'], $id, $this->images_root);
 			}
 
-			if (isset($data['introimage']))
-			{
-				$this->imageFolderHelper->saveItemImages($id, $data['imagefolder'], '#__info', 'introimage', $data['introimage']);
-			}
-			if (isset($data['header']))
-			{
-				$this->imageFolderHelper->saveItemImages($id, $data['imagefolder'], '#__info', 'header', $data['header']);
-			}
-
-			if (isset($data['images']))
-			{
-				$this->imageFolderHelper->saveItemImages($id, $data['imagefolder'], '#__info', 'images', $data['images']);
-			}
 
 			// Fix alias
 			if ($data['alias'] == 'id0' || $data['alias'] == 'id')
@@ -382,10 +346,12 @@ class InfoModelItem extends AdminModel
 	{
 		if (parent::delete($pks))
 		{
+			$filesHelper = new FieldTypesFilesHelper();
+
 			// Delete images
 			foreach ($pks as $pk)
 			{
-				$this->imageFolderHelper->deleteItemImageFolder($pk);
+				$filesHelper->deleteItemFolder($pk, $this->images_root);
 			}
 
 			return true;
@@ -424,7 +390,6 @@ class InfoModelItem extends AdminModel
 
 			return $response;
 		}
-
 
 		// Check idXXX
 		preg_match('/^id(.*)/', $alias, $matches);

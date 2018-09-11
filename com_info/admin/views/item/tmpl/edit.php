@@ -100,7 +100,7 @@ $doc->addScriptDeclaration('
 		<?php echo HTMLHelper::_('bootstrap.endTab'); ?>
 
 		<?php echo HTMLHelper::_('bootstrap.addTab', 'myTab', 'images', Text::_('COM_INFO_ITEM_IMAGES_FIELDSET')); ?>
-		<?php echo $this->form->renderField('imagefolder'); ?>
+		<?php echo $this->form->renderField('images_folder'); ?>
 		<p class="lead"><?php echo Text::_('COM_INFO_ITEM_IMAGES'); ?></p>
 		<?php echo $this->form->getInput('images'); ?>
 		<hr>

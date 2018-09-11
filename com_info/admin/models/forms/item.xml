@@ -36,18 +36,28 @@
 	</fieldset>
 
 	<fieldset name="images" label="COM_INFO_ITEM_IMAGES_FIELDSET">
-		<field name="imagefolder" type="imagefolder" path="images/info"/>
-		<field name="introimage" type="ajaximage"
-			   filename="intro"
-			   label="COM_INFO_ITEM_INTROIMAGE"/>
-		<field name="header" type="ajaximage"
-			   filename="header"
-			   label="COM_INFO_ITEM_HEADER"/>
-		<field name="images" type="ajaximage"
-			   label="COM_INFO_ITEM_IMAGES"
-			   multiple="true"
-			   subfolder="content"
-			   text="true"/>
+		<field name="images_folder" type="folder"
+			   label="JGLOBAL_FIELD_IMAGES_FOLDER_LABEL"/>
+		<field name="introimage" type="image"
+			   label="COM_INFO_ITEM_INTROIMAGE"
+			   folder_field="images_folder"
+			   filename="intro"/>
+
+		<!--<field name="imagefolder" type="imagefolder" path="images/info"/>-->
+
+		<!--<field name="introimage" type="ajaximage"-->
+			   <!--filename="intro"-->
+			   <!--label="COM_INFO_ITEM_INTROIMAGE"/>-->
+
+		<!--<field name="header" type="ajaximage"-->
+			   <!--filename="header"-->
+			   <!--label="COM_INFO_ITEM_HEADER"/>-->
+
+		<!--<field name="images" type="ajaximage"-->
+			   <!--label="COM_INFO_ITEM_IMAGES"-->
+			   <!--multiple="true"-->
+			   <!--subfolder="content"-->
+			   <!--text="true"/>-->
 	</fieldset>
 	<fieldset name="global">
 		<field name="in_work" type="radio"
