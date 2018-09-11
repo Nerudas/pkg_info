@@ -100,7 +100,7 @@ class com_InfoInstallerScript
 		$item->field_mappings->common->core_featured        = 'null';
 		$item->field_mappings->common->core_metadata        = 'metadata';
 		$item->field_mappings->common->core_language        = 'null';
-		$item->field_mappings->common->core_images          = 'introimage';
+		$item->field_mappings->common->core_images          = 'null';
 		$item->field_mappings->common->core_urls            = 'null';
 		$item->field_mappings->common->core_version         = 'null';
 		$item->field_mappings->common->core_ordering        = 'publish_up';
@@ -234,6 +234,22 @@ class com_InfoInstallerScript
 			{
 				JFolder::move($folder['fullname'], $newFolder . '/' . $folder['name']);
 			}
+		}
+
+		$db      = Factory::getDbo();
+		$table   = '#__info';
+		$columns = $db->getTableColumns($table);
+
+		// Remove introimage
+		if (isset($columns['introimage']))
+		{
+			$db->setQuery("ALTER TABLE " . $table . " DROP introimage")->query();
+		}
+
+		// Remove header
+		if (isset($columns['header']))
+		{
+			$db->setQuery("ALTER TABLE " . $table . " DROP header")->query();
 		}
 	}
 }

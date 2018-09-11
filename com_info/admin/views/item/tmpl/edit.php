@@ -107,7 +107,8 @@ $doc->addScriptDeclaration('
 		<p class="lead"><?php echo Text::_('COM_INFO_ITEM_HEADER'); ?>(1200 x 392)</p>
 		<?php echo $this->form->getInput('header'); ?>
 		<hr>
-		<?php echo $this->form->renderField('introimage'); ?>
+		<p class="lead"><?php echo Text::_('COM_INFO_ITEM_INTROIMAGE'); ?></p>
+		<?php echo $this->form->getInput('introimage'); ?>
 		<?php echo HTMLHelper::_('bootstrap.endTab'); ?>
 
 		<?php
