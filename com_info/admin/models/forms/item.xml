@@ -48,13 +48,11 @@
 			   folder_field="images_folder"
 			   filename="header"
 			   class="input-xxlarge"/>
-
-
-		<!--<field name="images" type="ajaximage"-->
-		<!--label="COM_INFO_ITEM_IMAGES"-->
-		<!--multiple="true"-->
-		<!--subfolder="content"-->
-		<!--text="true"/>-->
+		<field name="images" type="images"
+			   label="COM_INFO_ITEM_IMAGES"
+			   folder_field="images_folder"
+			   folder="content"
+			   text="true"/>
 	</fieldset>
 	<fieldset name="global">
 		<field name="in_work" type="radio"

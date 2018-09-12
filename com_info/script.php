@@ -12,6 +12,7 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
+use Joomla\Registry\Registry;
 
 class com_InfoInstallerScript
 {
@@ -250,6 +251,42 @@ class com_InfoInstallerScript
 		if (isset($columns['header']))
 		{
 			$db->setQuery("ALTER TABLE " . $table . " DROP header")->query();
+		}
+
+		$query = $db->getQuery(true)
+			->select(array('id', 'images'))
+			->from($table)
+			->where($db->quoteName('images') . ' != ' . $db->quote('{}'))
+			->where($db->quoteName('images') . ' != ' . $db->quote(''));
+		$db->setQuery($query);
+		$items = $db->loadObjectList();
+		foreach ($items as $item)
+		{
+			$registry  = new Registry($item->images);
+			$images    = $registry->toArray();
+			$newImages = array();
+
+			$update = false;
+
+			foreach ($images as $image)
+			{
+				if (!isset($image['ordering']))
+				{
+					$update             = true;
+					$newImage           = new stdClass();
+					$newImage->text     = $image['text'];
+					$newImage->ordering = count($newImages) + 1;
+
+					$newImages[$image['file']] = $newImage;
+				}
+			}
+
+			if ($update)
+			{
+				$registry     = new Registry($newImages);
+				$item->images = $registry->toString('json', array('bitmask' => JSON_UNESCAPED_UNICODE));
+				$db->updateObject($table, $item, array('id'));
+			}
 		}
 	}
 }

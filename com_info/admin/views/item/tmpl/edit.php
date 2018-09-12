@@ -51,31 +51,6 @@ $doc->addScriptDeclaration('
 				</fieldset>
 			</div>
 			<div class="span3">
-				<div class="control-group hidden">
-					<div class="well">
-						<div class="lead">
-							<?php echo Text::_('COM_INFO_ITEM_SHORTCODES'); ?>
-						</div>
-						<div>
-							<div class="row-fluid">
-								<div class="span4 text-right"><strong class="text-error">{id}</strong></div>
-								<div class="span8"><?php echo Text::_('COM_INFO_ITEM_SHORTCODES_ID'); ?></div>
-							</div>
-							<div class="row-fluid">
-								<div class="span4 text-right"><strong class="text-error">{title}</strong></div>
-								<div class="span8">
-									<?php echo Text::_('COM_INFO_ITEM_SHORTCODES_TITLE'); ?>
-								</div>
-							</div>
-							<div class="row-fluid">
-								<div class="span4 text-right"><strong class="text-error">{imageFolder}</strong></div>
-								<div class="span8">
-									<?php echo Text::_('COM_INFO_ITEM_SHORTCODES_IMAGEFOLDER'); ?>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
 				<fieldset class="form-vertical">
 					<?php echo $this->form->renderFieldset('global'); ?>
 				</fieldset>

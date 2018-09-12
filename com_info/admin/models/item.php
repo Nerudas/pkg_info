@@ -273,6 +273,9 @@ class InfoModelItem extends AdminModel
 			$data['tags_map']    = '';
 		}
 
+		$registry       = new Registry($data['images']);
+		$data['images'] = $registry->toString('json', array('bitmask' => JSON_UNESCAPED_UNICODE));
+
 		if (parent::save($data))
 		{
 			$id = $this->getState($this->getName() . '.id');
