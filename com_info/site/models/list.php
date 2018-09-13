@@ -13,7 +13,6 @@ defined('_JEXEC') or die;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\TagsHelper;
-use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Component\ComponentHelper;
@@ -57,8 +56,6 @@ class InfoModelList extends ListModel
 				'alias', 'i.alias',
 				'introtext', 'i.introtext',
 				'fulltext', 'i.fulltext',
-				'introimage', 'i.introimage',
-				'header', 'i.header',
 				'images', 'i.images',
 				'related', 'i.related',
 				'state', 'i.state',
@@ -80,10 +77,7 @@ class InfoModelList extends ListModel
 			);
 		}
 
-		JLoader::register('imageFolderHelper', JPATH_PLUGINS . '/fieldtypes/ajaximage/helpers/imagefolder.php');
-		$this->imageFolderHelper = new imageFolderHelper('images/info');
 		parent::__construct($config);
-
 	}
 
 	/**
@@ -192,7 +186,7 @@ class InfoModelList extends ListModel
 			->from($db->quoteName('#__info', 'i'));
 
 		// Join over the regions.
-		$query->select(array('r.id as region_id', 'r.name as region_name', 'r.icon as region_icon'))
+		$query->select(array('r.id as region_id', 'r.name as region_name'))
 			->join('LEFT', '#__location_regions AS r ON r.id = i.region');
 
 		// Join over the discussions.
@@ -316,11 +310,13 @@ class InfoModelList extends ListModel
 		{
 			$mainTags = ComponentHelper::getParams('com_info')->get('tags', array());
 			JLoader::register('DiscussionsHelperTopic', JPATH_SITE . '/components/com_discussions/helpers/topic.php');
+			JLoader::register('FieldTypesFilesHelper', JPATH_PLUGINS . '/fieldtypes/files/helper.php');
+			$imagesHelper = new FieldTypesFilesHelper();
 
 			foreach ($items as &$item)
 			{
-				$item->introimage = (!empty($item->introimage) && JFile::exists(JPATH_ROOT . '/' . $item->introimage)) ?
-					Uri::root(true) . '/' . $item->introimage : false;
+				$imageFolder      = 'images/info/' . $item->id;
+				$item->introimage = $imagesHelper->getImage('intro', $imageFolder, false);
 
 				$item->link = Route::_(InfoHelperRoute::getItemRoute($item->id));
 
@@ -349,20 +345,14 @@ class InfoModelList extends ListModel
 					$item->tags->itemTags = ArrayHelper::sortObjects($item->tags->itemTags, 'main', -1);
 				}
 
-				$item->imageFolder = $this->imageFolderHelper->getItemImageFolder($item->id);
-
 				// Get region
-				$item->region_icon = (!empty($item->region_icon) && JFile::exists(JPATH_ROOT . '/' . $item->region_icon)) ?
-					Uri::root(true) . $item->region_icon : false;
 				if ($item->region == '*')
 				{
-					$item->region_icon = false;
 					$item->region_name = Text::_('JGLOBAL_FIELD_REGIONS_ALL');
 				}
 
 				// Discussions posts count
 				$item->commentsCount = DiscussionsHelperTopic::getPostsTotal($item->discussions_topic_id);
-
 			}
 		}
 

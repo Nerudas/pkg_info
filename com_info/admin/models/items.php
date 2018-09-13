@@ -15,7 +15,6 @@ use Joomla\Utilities\ArrayHelper;
 use Joomla\CMS\Helper\TagsHelper;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Uri\Uri;
 
 class InfoModelItems extends ListModel
 {
@@ -37,7 +36,6 @@ class InfoModelItems extends ListModel
 				'introtext', 'i.introtext',
 				'fulltext', 'i.fulltext',
 				'introimage', 'i.introimage',
-				'header', 'i.header',
 				'images', 'i.images',
 				'related', 'i.related',
 				'state', 'i.state',
@@ -148,7 +146,7 @@ class InfoModelItems extends ListModel
 			->join('LEFT', '#__viewlevels AS ag ON ag.id = i.access');
 
 		// Join over the regions.
-		$query->select(array('r.id as region_id', 'r.name as region_name', 'r.icon as region_icon'))
+		$query->select(array('r.id as region_id', 'r.name as region_name'))
 			->join('LEFT', '#__location_regions AS r ON r.id = i.region');
 
 		// Filter by access level.
@@ -281,8 +279,6 @@ class InfoModelItems extends ListModel
 				}
 
 				// Get region
-				$item->region_icon = (!empty($item->region_icon) && JFile::exists(JPATH_ROOT . '/' . $item->region_icon)) ?
-					Uri::root(true) . $item->region_icon : false;
 				if ($item->region == '*')
 				{
 					$item->region_icon = false;

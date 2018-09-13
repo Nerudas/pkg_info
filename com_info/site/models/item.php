@@ -140,7 +140,7 @@ class InfoModelItem extends ItemModel
 						$db->quoteName('dt.context') . ' = ' . $db->quote('com_info.item'));
 
 				// Join over the regions.
-				$query->select(array('r.id as region_id', 'r.name as region_name', 'r.icon as region_icon'))
+				$query->select(array('r.id as region_id', 'r.name as region_name'))
 					->join('LEFT', '#__location_regions AS r ON r.id = i.region');
 
 				// Filter by published state.
@@ -171,17 +171,21 @@ class InfoModelItem extends ItemModel
 				// Link
 				$data->link = Route::_(InfoHelperRoute::getItemRoute($data->id));
 
+				JLoader::register('FieldTypesFilesHelper', JPATH_PLUGINS . '/fieldtypes/files/helper.php');
+				$imagesHelper = new FieldTypesFilesHelper();
+				$imageFolder  = 'images/info/' . $data->id;
 
+				$data->header = $imagesHelper->getImage('header', $imageFolder, false);
 
 				// Convert the images field to an array.
 				$registry     = new Registry($data->images);
 				$data->images = $registry->toArray();
-
-				$data->header = (!empty($data->header) && JFile::exists(JPATH_ROOT . '/' . $data->header)) ?
-					Uri::root(true) . '/' . $data->header : false;
+				$data->images = $imagesHelper->getImages('content', $imageFolder, $data->images,
+					array('text' => true, 'for_field' => false));
 
 				// Convert the metadata field
 				$data->metadata = new Registry($data->metadata);
+				$data->metadata->set('image', $imagesHelper->getImage('meta', $imageFolder, false));
 
 				// Get Tags
 				$mainTag = ComponentHelper::getParams('com_info')->get('tags');
@@ -199,11 +203,8 @@ class InfoModelItem extends ItemModel
 				}
 
 				// Get region
-				$data->region_icon = (!empty($data->region_icon) && JFile::exists(JPATH_ROOT . '/' . $data->region_icon)) ?
-					Uri::root(true) . $data->region_icon : false;
 				if ($data->region == '*')
 				{
-					$data->region_icon = false;
 					$data->region_name = Text::_('JGLOBAL_FIELD_REGIONS_ALL');
 				}
 
