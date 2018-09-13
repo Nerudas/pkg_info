@@ -247,25 +247,29 @@ class com_InfoInstallerScript
 		}
 
 		$query = $db->getQuery(true)
-			->select(array('id', 'images'))
-			->from($table)
-			->where($db->quoteName('images') . ' != ' . $db->quote('{}'))
-			->where($db->quoteName('images') . ' != ' . $db->quote(''));
+			->select('*')
+			->from($db->quoteName($table));
 		$db->setQuery($query);
+
 		$items = $db->loadObjectList();
+
 		foreach ($items as $item)
 		{
 			$registry  = new Registry($item->images);
 			$images    = $registry->toArray();
 			$newImages = array();
 
-			$update = false;
+			$imagefolder = 'images/info/' . $item->id . '/content';
 
+			$item->introtext = str_replace('{imageFolder}', $imagefolder, $item->introtext);
+			$item->fulltext  = str_replace('{imageFolder}', $imagefolder, $item->fulltext);
+
+			$updateImages = false;
 			foreach ($images as $image)
 			{
 				if (!isset($image['ordering']))
 				{
-					$update             = true;
+					$updateImages       = true;
 					$newImage           = new stdClass();
 					$newImage->text     = $image['text'];
 					$newImage->ordering = count($newImages) + 1;
@@ -273,13 +277,13 @@ class com_InfoInstallerScript
 					$newImages[$image['file']] = $newImage;
 				}
 			}
-
-			if ($update)
+			if ($updateImages)
 			{
 				$registry     = new Registry($newImages);
 				$item->images = $registry->toString('json', array('bitmask' => JSON_UNESCAPED_UNICODE));
-				$db->updateObject($table, $item, array('id'));
 			}
+
+			$db->updateObject($table, $item, array('id'));
 		}
 	}
 }

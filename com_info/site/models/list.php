@@ -360,11 +360,6 @@ class InfoModelList extends ListModel
 					$item->region_name = Text::_('JGLOBAL_FIELD_REGIONS_ALL');
 				}
 
-				// Shortcodes
-				$item->introtext = str_replace('{id}', $item->id, $item->introtext);
-				$item->introtext = str_replace('{title}', $item->title, $item->introtext);
-				$item->introtext = str_replace('{imageFolder}', $item->imageFolder . '/content', $item->introtext);
-
 				// Discussions posts count
 				$item->commentsCount = DiscussionsHelperTopic::getPostsTotal($item->discussions_topic_id);
 
