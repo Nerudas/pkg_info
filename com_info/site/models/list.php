@@ -316,7 +316,7 @@ class InfoModelList extends ListModel
 			foreach ($items as &$item)
 			{
 				$imageFolder      = 'images/info/' . $item->id;
-				$item->introimage = $imagesHelper->getImage('intro', $imageFolder, false);
+				$item->introimage = $imagesHelper->getImage('intro', $imageFolder, false, false);
 
 				$item->link = Route::_(InfoHelperRoute::getItemRoute($item->id));
 
