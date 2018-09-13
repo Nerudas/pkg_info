@@ -48,6 +48,12 @@ class com_InfoInstallerScript
 			JFolder::create($folder);
 			JFile::write($folder . '/index.html', '<!DOCTYPE html><title></title>');
 		}
+		$folder = JPATH_ROOT . '/images/info/tags';
+		if (!JFolder::exists($folder))
+		{
+			JFolder::create($folder);
+			JFile::write($folder . '/index.html', '<!DOCTYPE html><title></title>');
+		}
 	}
 
 	/**
@@ -224,19 +230,6 @@ class com_InfoInstallerScript
 	 */
 	public function update($parent)
 	{
-		$newFolder = JPATH_ROOT . '/images/info/items';
-		if (!JFolder::exists($newFolder))
-		{
-			JFolder::create($newFolder);
-			JFile::write($newFolder . '/index.html', '<!DOCTYPE html><title></title>');
-
-			$folders = JFolder::listFolderTree(JPATH_ROOT . '/images/info', '', '1');
-			foreach ($folders as $folder)
-			{
-				JFolder::move($folder['fullname'], $newFolder . '/' . $folder['name']);
-			}
-		}
-
 		$db      = Factory::getDbo();
 		$table   = '#__info';
 		$columns = $db->getTableColumns($table);

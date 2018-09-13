@@ -34,7 +34,7 @@ class InfoModelItem extends AdminModel
 	 *
 	 * @since  1.2.0
 	 */
-	protected $images_root = 'images/info/items';
+	protected $images_root = 'images/info';
 
 	/**
 	 * Method to get a single record.
