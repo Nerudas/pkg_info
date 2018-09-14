@@ -186,7 +186,7 @@ class InfoModelItem extends ItemModel
 
 				// Convert the metadata field
 				$data->metadata = new Registry($data->metadata);
-				$data->metadata->set('image', $imagesHelper->getImage('meta', $imageFolder, false));
+				$data->metadata->set('image', $imagesHelper->getImage('meta', $imageFolder, false, false));
 
 				// Get Tags
 				$mainTag = ComponentHelper::getParams('com_info')->get('tags');

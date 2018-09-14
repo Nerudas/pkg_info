@@ -165,10 +165,10 @@ class InfoViewList extends HtmlView
 		$pathway   = $app->getPathway();
 		$menu      = $app->getMenu()->getActive();
 		$id        = (int) @$menu->query['id'];
-
+		$current   = ($menu && $menu->query['option'] == 'com_info' && $menu->query['view'] == 'list' && $id == $this->tag->id);
 
 		// If the menu item does not concern this contact
-		if ($menu && ($menu->query['option'] !== 'com_info' || $menu->query['view'] !== 'list' || $id != $this->tag->id))
+		if (!$current)
 		{
 			$path   = array();
 			$path[] = array('title' => $this->tag->title, 'link' => '');
