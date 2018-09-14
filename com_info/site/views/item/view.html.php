@@ -16,6 +16,7 @@ use Joomla\CMS\Router\Route;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\Utilities\ArrayHelper;
 
 class InfoViewItem extends HtmlView
 {
@@ -189,7 +190,7 @@ class InfoViewItem extends HtmlView
 
 		// Process the content plugins.
 		PluginHelper::importPlugin('content');
-		$offset = $app->input->getUInt('limitstart');
+		$offset     = $app->input->getUInt('limitstart');
 		$item->text = &$item->fulltext;
 		$dispatcher->trigger('onContentPrepare', array('com_info.item', &$item, &$item->params, $offset));
 
@@ -213,13 +214,15 @@ class InfoViewItem extends HtmlView
 	 */
 	protected function _prepareDocument()
 	{
-		$app      = Factory::getApplication();
-		$pathway  = $app->getPathway();
-		$item     = $this->item;
-		$url      = rtrim(URI::root(), '/') . $item->link;
-		$sitename = $app->get('sitename');
-		$menu     = $app->getMenu()->getActive();
-		$id       = (int) @$menu->query['id'];
+		$app       = Factory::getApplication();
+		$pathway   = $app->getPathway();
+		$item      = $this->item;
+		$url       = Uri::getInstance()->toString();
+		$canonical = rtrim(URI::root(), '/') . $this->item->link;
+		$sitename  = $app->get('sitename');
+		$menu      = $app->getMenu()->getActive();
+		$id        = (int) @$menu->query['id'];
+		$current   = ($menu && $menu->query['option'] == 'com_info' && $menu->query['view'] == 'item' && $id == $item->id);
 		if ($menu)
 		{
 			$this->params->def('page_heading', $this->params->get('page_title', $menu->title));
@@ -231,8 +234,9 @@ class InfoViewItem extends HtmlView
 		$title = $this->params->get('page_title', $sitename);
 
 		// If the menu item does not concern this contact
-		if ($menu && ($menu->query['option'] !== 'com_info' || $menu->query['view'] !== 'item' || $id != $item->id))
+		if (!$current)
 		{
+
 			if ($item->title)
 			{
 				$title = $item->title;
@@ -263,9 +267,17 @@ class InfoViewItem extends HtmlView
 		{
 			$this->document->setDescription($item->metadesc);
 		}
-		elseif ($this->params->get('menu-meta_description'))
+		elseif ($current && $this->params->get('menu-meta_description'))
 		{
 			$this->document->setDescription($this->params->get('menu-meta_description'));
+		}
+		elseif (!empty($item->introtext))
+		{
+			$this->document->setDescription(JHtmlString::truncate($item->introtext, 150, false, false));
+		}
+		elseif (!empty($item->fulltext))
+		{
+			$this->document->setDescription(JHtmlString::truncate($item->fulltext, 150, false, false));
 		}
 
 		// Set Meta Keywords
@@ -273,9 +285,14 @@ class InfoViewItem extends HtmlView
 		{
 			$this->document->setMetadata('keywords', $item->metakey);
 		}
-		elseif ($this->params->get('menu-meta_keywords'))
+		elseif ($current && $this->params->get('menu-meta_keywords'))
 		{
 			$this->document->setMetadata('keywords', $this->params->get('menu-meta_keywords'));
+		}
+		elseif (!empty(($this->item->tags->itemTags)))
+		{
+			$this->document->setMetadata('keywords', implode(', ',
+				ArrayHelper::getColumn($this->item->tags->itemTags, 'title')));
 		}
 
 		// Set Meta Robots
@@ -307,11 +324,15 @@ class InfoViewItem extends HtmlView
 		// Set Meta Image
 		if ($item->metadata->get('image', ''))
 		{
-			$this->document->setMetaData('image', URI::base() . $item->metadata->get('image'));
+			$this->document->setMetaData('image', URI::root() . $item->metadata->get('image'));
 		}
-		elseif ($this->params->get('menu-meta_image', ''))
+		elseif ($current && $this->params->get('menu-meta_image', ''))
 		{
-			$this->document->setMetaData('image', Uri::base() . $this->params->get('menu-meta_image'));
+			$this->document->setMetaData('image', Uri::root() . $this->params->get('menu-meta_image'));
+		}
+		elseif ($this->item->introimage)
+		{
+			$this->document->setMetaData('image', Uri::root() . $this->item->introimage);
 		}
 
 		// Set Meta twitter
@@ -327,7 +348,7 @@ class InfoViewItem extends HtmlView
 		{
 			$this->document->setMetaData('twitter:image', $this->document->getMetaData('image'));
 		}
-		$this->document->setMetaData('twitter:url', $url);
+		$this->document->setMetaData('twitter:url', $canonical);
 
 		// Set Meta Open Graph
 		$this->document->setMetadata('og:type', 'website', 'property');
@@ -341,7 +362,40 @@ class InfoViewItem extends HtmlView
 		{
 			$this->document->setMetaData('og:image', $this->document->getMetaData('image'), 'property');
 		}
-		$this->document->setMetaData('og:url', $url, 'property');
+		$this->document->setMetaData('og:url', $canonical, 'property');
 
+		// Set canonical
+		if ($url !== $canonical)
+		{
+			$this->document->addHeadLink($canonical, 'canonical');
+
+			$uri        = Uri::getInstance();
+			$link       = $canonical;
+			$linkParams = array();
+			$hash       = '';
+
+			if (!empty($uri->getVar('start')))
+			{
+				$linkParams['start'] = $uri->getVar('start');
+			}
+
+			if (!empty($uri->getVar('post_id')) || $uri->getVar('post_id') == 0)
+			{
+				$hash = '#comments';
+
+				$linkParams['post_id'] = $uri->getVar('post_id');
+			}
+
+			if (!empty($linkParams))
+			{
+				$link = $link . '?' . http_build_query($linkParams);
+			}
+
+			if ($url != $link)
+			{
+				$link .= $hash;
+				$app->redirect($link, true);
+			}
+		}
 	}
 }

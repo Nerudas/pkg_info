@@ -175,7 +175,8 @@ class InfoModelItem extends ItemModel
 				$imagesHelper = new FieldTypesFilesHelper();
 				$imageFolder  = 'images/info/' . $data->id;
 
-				$data->header = $imagesHelper->getImage('header', $imageFolder, false, false);
+				$data->header     = $imagesHelper->getImage('header', $imageFolder, false, false);
+				$data->introimage = $imagesHelper->getImage('intro', $imageFolder, false, false);
 
 				// Convert the images field to an array.
 				$registry     = new Registry($data->images);
