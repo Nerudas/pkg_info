@@ -159,12 +159,12 @@ class InfoViewList extends HtmlView
 	 */
 	protected function _prepareDocument()
 	{
-		$app      = Factory::getApplication();
-		$url      = rtrim(URI::root(), '/') . $this->link;
-		$sitename = $app->get('sitename');
-		$pathway  = $app->getPathway();
-		$menu     = $app->getMenu()->getActive();
-		$id       = (int) @$menu->query['id'];
+		$app       = Factory::getApplication();
+		$canonical = rtrim(URI::root(), '/') . $this->link;
+		$sitename  = $app->get('sitename');
+		$pathway   = $app->getPathway();
+		$menu      = $app->getMenu()->getActive();
+		$id        = (int) @$menu->query['id'];
 
 
 		// If the menu item does not concern this contact
@@ -236,7 +236,7 @@ class InfoViewList extends HtmlView
 		{
 			$this->document->setMetaData('twitter:image', $this->document->getMetaData('image'));
 		}
-		$this->document->setMetaData('twitter:url', $url);
+		$this->document->setMetaData('twitter:url', $canonical);
 
 		// Set Meta Open Graph
 		$this->document->setMetadata('og:type', 'website', 'property');
@@ -250,6 +250,45 @@ class InfoViewList extends HtmlView
 		{
 			$this->document->setMetaData('og:image', $this->document->getMetaData('image'), 'property');
 		}
-		$this->document->setMetaData('og:url', $url, 'property');
+		$this->document->setMetaData('og:url', $canonical, 'property');
+
+		// No doubles
+		$uri = Uri::getInstance();
+		$url = urldecode($uri->toString());
+		if ($url !== $canonical)
+		{
+			$this->document->addHeadLink($canonical, 'canonical');
+
+			$link       = $canonical;
+			$linkParams = array();
+
+			if (!empty($uri->getVar('start')))
+			{
+				$linkParams['start'] = $uri->getVar('start');
+			}
+
+			$filter = array();
+			foreach ($uri->getVar('filter', array()) as $name => $value)
+			{
+				if (!empty($value))
+				{
+					$filter[$name] = $value;
+				}
+			}
+			if (!empty($filter))
+			{
+				$linkParams['filter'] = $filter;
+			}
+
+			if (!empty($linkParams))
+			{
+				$link = $link . '?' . urldecode(http_build_query($linkParams));
+			}
+
+			if ($url != $link)
+			{
+				$app->redirect($link, true);
+			}
+		}
 	}
 }

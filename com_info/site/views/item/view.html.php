@@ -217,7 +217,6 @@ class InfoViewItem extends HtmlView
 		$app       = Factory::getApplication();
 		$pathway   = $app->getPathway();
 		$item      = $this->item;
-		$url       = Uri::getInstance()->toString();
 		$canonical = rtrim(URI::root(), '/') . $this->item->link;
 		$sitename  = $app->get('sitename');
 		$menu      = $app->getMenu()->getActive();
@@ -364,12 +363,13 @@ class InfoViewItem extends HtmlView
 		}
 		$this->document->setMetaData('og:url', $canonical, 'property');
 
-		// Set canonical
+		// No doubles
+		$uri = Uri::getInstance();
+		$url = urldecode($uri->toString());
 		if ($url !== $canonical)
 		{
 			$this->document->addHeadLink($canonical, 'canonical');
 
-			$uri        = Uri::getInstance();
 			$link       = $canonical;
 			$linkParams = array();
 			$hash       = '';
@@ -388,7 +388,7 @@ class InfoViewItem extends HtmlView
 
 			if (!empty($linkParams))
 			{
-				$link = $link . '?' . http_build_query($linkParams);
+				$link = $link . '?' . urldecode(http_build_query($linkParams));
 			}
 
 			if ($url != $link)
