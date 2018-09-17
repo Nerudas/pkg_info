@@ -4,7 +4,6 @@ CREATE TABLE IF NOT EXISTS `#__info` (
   `alias`        VARCHAR(400)     NOT NULL DEFAULT '',
   `introtext`    LONGTEXT         NOT NULL DEFAULT '',
   `fulltext`     LONGTEXT         NOT NULL DEFAULT '',
-  `header`       TEXT             NOT NULL DEFAULT '',
   `images`       LONGTEXT         NOT NULL DEFAULT '',
   `related`      LONGTEXT         NOT NULL DEFAULT '',
   `state`        TINYINT(3)       NOT NULL DEFAULT '0',
@@ -23,6 +22,17 @@ CREATE TABLE IF NOT EXISTS `#__info` (
   `metadata`     MEDIUMTEXT       NOT NULL DEFAULT '',
   `tags_search`  MEDIUMTEXT       NOT NULL DEFAULT '',
   `tags_map`     MEDIUMTEXT       NOT NULL DEFAULT '',
+  UNIQUE KEY `id` (`id`)
+)
+  ENGINE = MyISAM
+  DEFAULT CHARSET = utf8
+AUTO_INCREMENT = 0;
+
+CREATE TABLE IF NOT EXISTS `#__info_tags` (
+  `id`           INT(11)          NOT NULL AUTO_INCREMENT,
+  `metakey`      MEDIUMTEXT       NOT NULL DEFAULT '',
+  `metadesc`     MEDIUMTEXT       NOT NULL DEFAULT '',
+  `metadata`     MEDIUMTEXT       NOT NULL DEFAULT '',
   UNIQUE KEY `id` (`id`)
 )
   ENGINE = MyISAM

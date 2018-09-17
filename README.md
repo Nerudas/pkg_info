@@ -27,4 +27,7 @@ Module for displaying information tags
 Plugin for displaying information items via shortcodes
 
 * **Sitemap - Information Plugin**  
-Plugin for adding the Info section to sitemap
+Plugin for adding the Info section to sitemap* 
+
+**Content - Tags Information Metadata Plugin**  
+Plugin for adding metadata fields in com_tags

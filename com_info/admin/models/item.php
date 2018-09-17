@@ -219,20 +219,20 @@ class InfoModelItem extends AdminModel
 		if (isset($data['attribs']) && is_array($data['attribs']))
 		{
 			$registry        = new Registry($data['attribs']);
-			$data['attribs'] = (string) $registry;
+			$data['attribs'] = $registry->toString('json', array('bitmask' => JSON_UNESCAPED_UNICODE));
 		}
 
 		if (isset($data['metadata']) && is_array($data['metadata']))
 		{
 			$registry         = new Registry($data['metadata']);
-			$data['metadata'] = (string) $registry;
+			$data['metadata'] =$registry->toString('json', array('bitmask' => JSON_UNESCAPED_UNICODE));
 		}
 
 
 		if (isset($data['related']) && is_array($data['related']))
 		{
 			$registry        = new Registry($data['related']);
-			$data['related'] = (string) $registry;
+			$data['related'] = $registry->toString('json', array('bitmask' => JSON_UNESCAPED_UNICODE));
 		}
 
 		if (empty($data['created_by']))
