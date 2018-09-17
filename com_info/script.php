@@ -12,7 +12,6 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
-use Joomla\Registry\Registry;
 
 class com_InfoInstallerScript
 {
@@ -216,74 +215,6 @@ class com_InfoInstallerScript
 					}
 				}
 			}
-		}
-	}
-
-	/**
-	 * Remove categories
-	 *
-	 * @param  \stdClass $parent - Parent object calling object.
-	 *
-	 * @return void
-	 *
-	 * @since  1.2.0
-	 */
-	public function update($parent)
-	{
-		$db      = Factory::getDbo();
-		$table   = '#__info';
-		$columns = $db->getTableColumns($table);
-
-		// Remove introimage
-		if (isset($columns['introimage']))
-		{
-			$db->setQuery("ALTER TABLE " . $table . " DROP introimage")->query();
-		}
-
-		// Remove header
-		if (isset($columns['header']))
-		{
-			$db->setQuery("ALTER TABLE " . $table . " DROP header")->query();
-		}
-
-		$query = $db->getQuery(true)
-			->select('*')
-			->from($db->quoteName($table));
-		$db->setQuery($query);
-
-		$items = $db->loadObjectList();
-
-		foreach ($items as $item)
-		{
-			$registry  = new Registry($item->images);
-			$images    = $registry->toArray();
-			$newImages = array();
-
-			$imagefolder = 'images/info/' . $item->id . '/content';
-
-			$item->introtext = str_replace('{imageFolder}', $imagefolder, $item->introtext);
-			$item->fulltext  = str_replace('{imageFolder}', $imagefolder, $item->fulltext);
-
-			$updateImages = false;
-			foreach ($images as $image)
-			{
-				if (!isset($image['ordering']))
-				{
-					$updateImages       = true;
-					$newImage           = new stdClass();
-					$newImage->text     = $image['text'];
-					$newImage->ordering = count($newImages) + 1;
-
-					$newImages[$image['file']] = $newImage;
-				}
-			}
-			if ($updateImages)
-			{
-				$registry     = new Registry($newImages);
-				$item->images = $registry->toString('json', array('bitmask' => JSON_UNESCAPED_UNICODE));
-			}
-
-			$db->updateObject($table, $item, array('id'));
 		}
 	}
 }
