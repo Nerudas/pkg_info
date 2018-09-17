@@ -166,16 +166,12 @@ class InfoViewList extends HtmlView
 		$menu      = $app->getMenu()->getActive();
 		$id        = (int) @$menu->query['id'];
 		$current   = ($menu && $menu->query['option'] == 'com_info' && $menu->query['view'] == 'list' && $id == $this->tag->id);
+		$tag       = $this->tag;
 
 		// If the menu item does not concern this contact
 		if (!$current)
 		{
-			$path   = array();
-			$path[] = array('title' => $this->tag->title, 'link' => '');
-			foreach (array_reverse($path) as $item)
-			{
-				$pathway->addItem($item['title'], $item['link']);
-			}
+			$pathway->addItem($tag->title, '');
 		}
 
 
@@ -200,27 +196,55 @@ class InfoViewList extends HtmlView
 		$this->document->setTitle($title);
 
 		// Set Meta Description
-		if ($this->params->get('menu-meta_description'))
+		if (!empty($tag->metadesc))
+		{
+			$this->document->setDescription($tag->metadesc);
+		}
+		elseif ($current && $this->params->get('menu-meta_description'))
 		{
 			$this->document->setDescription($this->params->get('menu-meta_description'));
 		}
 
 		// Set Meta Keywords
-		if ($this->params->get('menu-meta_keywords'))
+		if (!empty($tag->metakey))
+		{
+			$this->document->setMetadata('keywords', $tag->metakey);
+		}
+		elseif ($current && $this->params->get('menu-meta_keywords'))
 		{
 			$this->document->setMetadata('keywords', $this->params->get('menu-meta_keywords'));
 		}
 
 		// Set Meta Robots
-		if ($this->params->get('robots'))
+		if ($tag->metadata->get('robots', ''))
+		{
+			$this->document->setMetadata('robots', $tag->metadata->get('robots', ''));
+		}
+		elseif ($this->params->get('robots'))
 		{
 			$this->document->setMetadata('robots', $this->params->get('robots'));
 		}
 
-		// Set Meta Image
-		if ($this->params->get('menu-meta_image', ''))
+		// Set Meta Author
+		if ($app->get('MetaAuthor') == '1' && $tag->metadata->get('author', ''))
 		{
-			$this->document->setMetaData('image', Uri::base() . $this->params->get('menu-meta_image'));
+			$this->document->setMetaData('author', $tag->metadata->get('author'));
+		}
+
+		// Set Meta Rights
+		if ($tag->metadata->get('rights', ''))
+		{
+			$this->document->setMetaData('author', $tag->metadata->get('rights'));
+		}
+
+		// Set Meta Image
+		if ($tag->metadata->get('image', ''))
+		{
+			$this->document->setMetaData('image', URI::root() . $tag->metadata->get('image'));
+		}
+		elseif ($current && $this->params->get('menu-meta_image', ''))
+		{
+			$this->document->setMetaData('image', Uri::root() . $this->params->get('menu-meta_image'));
 		}
 
 		// Set Meta twitter

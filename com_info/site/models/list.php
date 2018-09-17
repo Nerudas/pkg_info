@@ -21,6 +21,8 @@ use Joomla\CMS\Language\Text;
 
 jimport('joomla.filesystem.file');
 
+JLoader::register('FieldTypesFilesHelper', JPATH_PLUGINS . '/fieldtypes/files/helper.php');
+
 class InfoModelList extends ListModel
 {
 	/**
@@ -476,6 +478,9 @@ class InfoModelList extends ListModel
 			$root->id        = 1;
 			$root->parent_id = 0;
 			$root->link      = Route::_(InfoHelperRoute::getListRoute(1));
+			$root->metakey   = '';
+			$root->metadesc  = '';
+			$root->metadata  = new Registry();
 
 			if ($tag_id > 1)
 			{
@@ -485,10 +490,12 @@ class InfoModelList extends ListModel
 				{
 					$db    = $this->getDbo();
 					$query = $db->getQuery(true)
-						->select(array('t.id', 't.parent_id', 't.title', 'pt.title as parent_title'))
+						->select(array('t.id', 't.parent_id', 't.title', 'pt.title as parent_title',
+							'mt.metakey', 'mt.metadesc', 'mt.metadata'))
 						->from('#__tags AS t')
 						->where('t.id = ' . (int) $tag_id)
-						->join('LEFT', '#__tags AS pt ON pt.id = t.parent_id');
+						->join('LEFT', '#__tags AS pt ON pt.id = t.parent_id')
+						->join('LEFT', '#__info_tags AS mt ON mt.id = t.id');
 
 					$user = Factory::getUser();
 					if (!$user->authorise('core.admin'))
@@ -511,6 +518,13 @@ class InfoModelList extends ListModel
 					}
 
 					$data->link = Route::_(InfoHelperRoute::getListRoute($data->id));
+
+					$imagesHelper = new FieldTypesFilesHelper();
+					$imageFolder  = 'images/info/tags/' . $data->id;
+
+					// Convert the metadata field
+					$data->metadata = new Registry($data->metadata);
+					$data->metadata->set('image', $imagesHelper->getImage('meta', $imageFolder, false, false));
 
 					$this->_tag = $data;
 				}

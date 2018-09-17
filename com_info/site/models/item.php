@@ -23,6 +23,8 @@ use Joomla\CMS\Component\ComponentHelper;
 
 jimport('joomla.filesystem.file');
 
+JLoader::register('FieldTypesFilesHelper', JPATH_PLUGINS . '/fieldtypes/files/helper.php');
+
 class InfoModelItem extends ItemModel
 {
 	/**
@@ -49,23 +51,6 @@ class InfoModelItem extends ItemModel
 	 * @since  1.0.0
 	 */
 	protected $_comments = array();
-
-	/**
-	 * Constructor.
-	 *
-	 * @param   array $config An optional associative array of configuration settings.
-	 *
-	 * @see     AdminModel
-	 *
-	 * @since   1.0.0
-	 */
-	public function __construct($config = array())
-	{
-		JLoader::register('imageFolderHelper', JPATH_PLUGINS . '/fieldtypes/ajaximage/helpers/imagefolder.php');
-		$this->imageFolderHelper = new imageFolderHelper('images/info');
-
-		parent::__construct($config);
-	}
 
 	/**
 	 * Method to auto-populate the model state.
