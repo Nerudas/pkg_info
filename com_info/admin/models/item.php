@@ -225,7 +225,7 @@ class InfoModelItem extends AdminModel
 		if (isset($data['metadata']) && is_array($data['metadata']))
 		{
 			$registry         = new Registry($data['metadata']);
-			$data['metadata'] =$registry->toString('json', array('bitmask' => JSON_UNESCAPED_UNICODE));
+			$data['metadata'] = $registry->toString('json', array('bitmask' => JSON_UNESCAPED_UNICODE));
 		}
 
 
@@ -285,6 +285,12 @@ class InfoModelItem extends AdminModel
 			{
 				$filesHelper = new FieldTypesFilesHelper();
 				$filesHelper->moveTemporaryFolder($data['images_folder'], $id, $this->images_root);
+
+				$update            = new stdClass();
+				$update->id        = $id;
+				$update->introtext = str_replace($data['images_folder'], $this->images_root . '/' . $id, $data['introtext']);
+				$update->fulltext  = str_replace($data['images_folder'], $this->images_root . '/' . $id, $data['fulltext']);
+				$db->updateObject('#__info', $update, array('id'));
 			}
 
 
