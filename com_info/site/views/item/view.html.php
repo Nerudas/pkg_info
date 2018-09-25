@@ -379,7 +379,7 @@ class InfoViewItem extends HtmlView
 				$linkParams['start'] = $uri->getVar('start');
 			}
 
-			if (!empty($uri->getVar('post_id')) || $uri->getVar('post_id') == 0)
+			if (!empty($uri->getVar('post_id')) || $uri->getVar('post_id', 'none') !== 'none')
 			{
 				$hash = '#comments';
 
