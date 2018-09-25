@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form>
-	<fieldset name="test" label="PLG_CONTENT_TAGS_INFO_META_FIELDSET">
+	<fieldset name="info_meta" label="PLG_CONTENT_TAGS_INFO_META_FIELDSET">
 		<field name="info_images_folder" type="folder"
 			   label="JGLOBAL_FIELD_IMAGES_FOLDER_LABEL"/>
 		<field name="info_metakey" type="textarea"
