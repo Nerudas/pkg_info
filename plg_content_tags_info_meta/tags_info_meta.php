@@ -136,11 +136,14 @@ class plgContentTags_Info_Meta extends CMSPlugin
 			$db->setQuery($query);
 			$object = $db->loadObject();
 
-			$data->info_metakey  = $object->metakey;
-			$data->info_metadesc = $object->metadesc;
+			if (!empty($object))
+			{
+				$data->info_metakey  = $object->metakey;
+				$data->info_metadesc = $object->metadesc;
 
-			$registry            = new Registry($object->metadata);
-			$data->info_metadata = $registry->toArray();
+				$registry            = new Registry($object->metadata);
+				$data->info_metadata = $registry->toArray();
+			}
 		}
 	}
 
