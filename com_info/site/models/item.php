@@ -18,7 +18,6 @@ use Joomla\Registry\Registry;
 use Joomla\Utilities\ArrayHelper;
 use Joomla\CMS\Helper\TagsHelper;
 use Joomla\CMS\Table\Table;
-use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Component\ComponentHelper;
 
 jimport('joomla.filesystem.file');
@@ -285,7 +284,7 @@ class InfoModelItem extends ItemModel
 
 				$db    = Factory::getDbo();
 				$query = $db->getQuery(true)
-					->select(array('id', 'title as item_title', 'introimage as image'))
+					->select(array('id', 'title as item_title'))
 					->from($db->quoteName('#__info', 'i'))
 					->where('i.id IN (' . $itemIds . ')')
 					->group(array('i.id'));
@@ -315,11 +314,14 @@ class InfoModelItem extends ItemModel
 
 				$db->setQuery($query);
 				$objects = $db->loadObjectList('id');
+				JLoader::register('FieldTypesFilesHelper', JPATH_PLUGINS . '/fieldtypes/files/helper.php');
+				$imagesHelper = new FieldTypesFilesHelper();
+
 				foreach ($objects as $id => $object)
 				{
 					$relatedObject = &$related[$id];
-					$image         = (!empty($object->image) && JFile::exists(JPATH_ROOT . '/' . $object->image)) ?
-						Uri::root(true) . '/' . $object->image : false;
+					$imageFolder   = 'images/info/' . $object->id;
+					$image         = $imagesHelper->getImage('intro', $imageFolder, false, false);
 
 					$relatedObject->set('image', $image);
 					$relatedObject->set('item_title', $object->item_title);
