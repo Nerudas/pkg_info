@@ -138,6 +138,11 @@ class InfoViewItems extends HtmlView
 			JToolbarHelper::custom('items.unWork', 'box-remove', 'unWork',
 				'COM_INFO_TOOLBAR_UN_WORK', true);
 		}
+		if ($canDo->get('core.create'))
+		{
+			JToolbarHelper::custom('items.duplicate', 'copy.png', 'copy_f2.png', 'JTOOLBAR_DUPLICATE', true);
+		}
+
 		if ($this->state->get('filter.published') == -2 && $canDo->get('core.delete'))
 		{
 			JToolbarHelper::deleteList('JGLOBAL_CONFIRM_DELETE', 'items.delete', 'JTOOLBAR_EMPTY_TRASH');

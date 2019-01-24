@@ -13,6 +13,7 @@ defined('_JEXEC') or die;
 use Joomla\CMS\MVC\Controller\AdminController;
 use Joomla\CMS\Session\Session;
 use Joomla\CMS\Language\Text;
+use Joomla\Utilities\ArrayHelper;
 
 class InfoControllerItems extends AdminController
 {
@@ -112,6 +113,36 @@ class InfoControllerItems extends AdminController
 			}
 		}
 
+		$this->setRedirect('index.php?option=com_info&view=items');
+	}
+
+	/**
+	 * Method to clone an existing item.
+	 *
+	 * @return  void
+	 *
+	 * @since  1.0.0
+	 */
+	public function duplicate()
+	{
+		// Check for request forgeries
+		Session::checkToken() or jexit(Text::_('JINVALID_TOKEN'));
+		$pks = $this->input->post->get('cid', array(), 'array');
+		$pks = ArrayHelper::toInteger($pks);
+		try
+		{
+			if (empty($pks))
+			{
+				throw new Exception(Text::_('COM_INFO_ERROR_NO_ITEMS_SELECTED'));
+			}
+			$model = $this->getModel();
+			$model->duplicate($pks);
+			$this->setMessage(Text::plural('COM_INFO_N_ITEMS_DUPLICATED', count($pks)));
+		}
+		catch (Exception $e)
+		{
+			JError::raiseWarning(500, $e->getMessage());
+		}
 		$this->setRedirect('index.php?option=com_info&view=items');
 	}
 }

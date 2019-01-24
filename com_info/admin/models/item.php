@@ -22,6 +22,7 @@ use Joomla\CMS\Filter\OutputFilter;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\MVC\Model\BaseDatabaseModel;
+use Joomla\Utilities\ArrayHelper;
 
 JLoader::register('FieldTypesFilesHelper', JPATH_PLUGINS . '/fieldtypes/files/helper.php');
 
@@ -367,6 +368,48 @@ class InfoModelItem extends AdminModel
 		}
 
 		return false;
+	}
+
+	/**
+	 * Method to duplicate one or more records.
+	 *
+	 * @param   array &$pks An array of primary key IDs.
+	 *
+	 * @return  boolean|JException  Boolean true on success, JException instance on error
+	 *
+	 * @since  1.0.0
+	 *
+	 * @throws  Exception
+	 */
+	public function duplicate(&$pks)
+	{
+		// Access checks.
+		if (!Factory::getUser()->authorise('core.create', 'com_info'))
+		{
+			throw new Exception(Text::_('JERROR_CORE_CREATE_NOT_PERMITTED'));
+		}
+		$filesHelper = new FieldTypesFilesHelper();
+
+		foreach ($pks as $pk)
+		{
+			if ($item = $this->getItem($pk))
+			{
+				unset($item->id);
+				$item->title         = $item->title . ' ' . Text::_('JGLOBAL_COPY');
+				$item->alias         = '';
+				$item->published     = $item->state = 0;
+				$item->tags          = (!empty($item->tags) && !empty($item->tags->tags)) ? explode(',', $item->tags->tags) :
+					array();
+				$item->images_folder = $filesHelper->copyItemFolder($pk, $this->images_root);
+				$this->save(ArrayHelper::fromObject($item));
+
+			}
+		}
+
+
+		$this->cleanCache();
+
+		return true;
 	}
 
 	/**
