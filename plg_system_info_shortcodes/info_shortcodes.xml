@@ -2,12 +2,12 @@
 <extension version="3.8" type="plugin" group="system" method="upgrade">
 	<name>PLG_SYSTEM_INFO_SHORTCODES</name>
 	<author>Nerudas</author>
-	<creationDate>January 2019</creationDate>
+	<creationDate>February 2019</creationDate>
 	<copyright>Copyright (c) 2015 - 2018 Nerudas. All rights reserved.</copyright>
 	<license>http://www.gnu.org/copyleft/gpl.html GNU/GPL</license>
 	<authorEmail>support@nerudas.ru</authorEmail>
 	<authorUrl>nerudas.ru</authorUrl>
-	<version>1.2.4</version>
+	<version>1.2.5</version>
 	<description>PLG_SYSTEM_INFO_SHORTCODES_DESCRIPTION</description>
 	<languages folder="language">
 		<language tag="en-GB">en-GB/en-GB.plg_system_info_shortcodes.ini</language>

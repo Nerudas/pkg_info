@@ -2,12 +2,12 @@
 <extension version="3.8" type="module" client="administrator" method="upgrade">
 	<name>MOD_INFO_ADMIN</name>
 	<author>Nerudas</author>
-	<creationDate>January 2019</creationDate>
+	<creationDate>February 2019</creationDate>
 	<copyright>Copyright (c) 2015 - 2018 Nerudas. All rights reserved.</copyright>
 	<license>http://www.gnu.org/copyleft/gpl.html GNU/GPL</license>
 	<authorEmail>support@nerudas.ru</authorEmail>
 	<authorUrl>nerudas.ru</authorUrl>
-	<version>1.2.4</version>
+	<version>1.2.5</version>
 	<description>MOD_INFO_ADMIN_DESCRIPTION</description>
 	<languages folder="language">
 		<language tag="en-GB">en-GB/en-GB.mod_info_admin.ini</language>
