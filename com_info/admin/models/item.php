@@ -395,6 +395,7 @@ class InfoModelItem extends AdminModel
 			if ($item = $this->getItem($pk))
 			{
 				unset($item->id);
+				unset($item->hits);
 				$item->title         = $item->title . ' ' . Text::_('JGLOBAL_COPY');
 				$item->alias         = '';
 				$item->published     = $item->state = 0;
